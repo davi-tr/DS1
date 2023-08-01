@@ -1,17 +1,17 @@
 # DS1
 ---
-######Repositorio destinado a mantenimento do projeto da disciplina de Desenvolvimento de Sistemas
+###### Repositorio destinado a mantenimento do projeto da disciplina de Desenvolvimento de Sistemas
 ---
-##Sobre o projeto
-###Objetivo principal:
+## Sobre o projeto
+### Objetivo principal:
 Criar uma aplicação web visando simular o maximo possivel como é o desenvolvimento de um software no mundo real.
 
-###Descrição do projeto:
+### Descrição do projeto:
 Desenvolver um sistema para resumo de produção científica de pesquisadores de uma universidade. Os dados de produção devem ser extraídos dos currículos Lattes dos
 pesquisadores. O sistema deve ser capaz de sintetizar os itens produzidos pelos
 pesquisadores, bem como detalhá-los.
 
-####Tecnologias utilizadas no projeto
+#### Tecnologias utilizadas no projeto
 
 | Java (JDK 17)      | Maven | SpringBoot | MySQL | Amazon AWS
 | :-----------: | :-----------: | :-----------: | :-----------: |  :-----------:

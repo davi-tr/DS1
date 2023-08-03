@@ -1,4 +1,4 @@
-package br.com.femass.ProjetoDS1;
+package br.com.femass.ProjetoDS1.domain;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

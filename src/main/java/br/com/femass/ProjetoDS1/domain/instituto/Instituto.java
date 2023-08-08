@@ -26,7 +26,7 @@ public class Instituto {
          this.status = false;
      }
 
-     public void atualizarInstituto(DadosCadastroInstituto dados){
+     public void atualizarInstituto(DadosAtualizarInstituto dados){
          if(dados.nome() != null){
              this.nome = dados.nome();
          }
@@ -34,5 +34,6 @@ public class Instituto {
              this.acronimo = dados.acronimo();
          }
      }
+
 
 }

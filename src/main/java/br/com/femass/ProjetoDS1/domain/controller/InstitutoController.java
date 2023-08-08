@@ -34,6 +34,31 @@ public class InstitutoController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/{ac}")
+    public ResponseEntity encontrarAcronimo(@PathVariable String ac){
+        var instituto = repository.findAllByAcronimo(ac);
+
+        return ResponseEntity.ok(new DadosUnicoInstituto(instituto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deletarInstituto(@PathVariable Long id){
+        var instituto = repository.getReferenceById(id);
+        instituto.excluir();
+        repository.save(instituto);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping()
+    public ResponseEntity atualiza(@RequestBody @Valid DadosAtualizarInstituto dados){
+        var instituto = repository.getReferenceById(dados.id());
+        instituto.atualizarInstituto(dados);
+        repository.save(instituto);
+
+        return ResponseEntity.ok(new DadosUnicoInstituto(instituto));
+    }
+
 
 
 }

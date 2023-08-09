@@ -1,4 +1,4 @@
-package br.com.femass.ProjetoDS1.domain.controller;
+package br.com.femass.ProjetoDS1.controller;
 
 import br.com.femass.ProjetoDS1.domain.instituto.*;
 import jakarta.transaction.Transactional;
@@ -24,7 +24,7 @@ public class InstitutoController {
         var instituto = new Instituto(dados);
         repository.save(instituto);
 
-        var uri = uriBuilder.path("instituto/{id}").buildAndExpand(instituto.getId()).toUri();
+        var uri = uriBuilder.path("instituto/id={id}").buildAndExpand(instituto.getId()).toUri();
         return ResponseEntity.created(uri).body(new DadosUnicoInstituto(instituto));
     }
 
@@ -34,6 +34,12 @@ public class InstitutoController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/id={id}")
+    public ResponseEntity encontrarPorID(@PathVariable Long id){
+        var instituto = repository.getReferenceById(id);
+
+        return ResponseEntity.ok(new DadosUnicoInstituto(instituto));
+    }
     @GetMapping("/{ac}")
     public ResponseEntity encontrarAcronimo(@PathVariable String ac){
         var instituto = repository.findAllByAcronimo(ac);

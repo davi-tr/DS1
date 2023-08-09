@@ -25,8 +25,9 @@ import java.sql.SQLIntegrityConstraintViolationException;
         @ExceptionHandler(DataIntegrityViolationException.class)
         public ResponseEntity tratarErro400(DataIntegrityViolationException ex){
             var erros = ex.getRootCause();
-            if(erros.toString().contains("Duplicate")){
-                return ResponseEntity.badRequest().body("Valor duplicado");
+            if(erros.toString().contains("ACRONIMO")){
+
+                return ResponseEntity.badRequest().body(new MensagemSQL("Acronimo já existe no sistema"));
             }
 
 
@@ -38,9 +39,13 @@ import java.sql.SQLIntegrityConstraintViolationException;
         }
 
         private record DadosSQL(String mensagem){
-            public DadosSQL(String mensagem2){
-                this(mensagem2.toUpperCase());
+            public DadosSQL(Throwable err){
+                this(err.getMessage());
             }
+        }
+
+        private record MensagemSQL(String mensagem){
+
         }
 
     }

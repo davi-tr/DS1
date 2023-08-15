@@ -40,9 +40,16 @@ public class InstitutoController {
 
         return ResponseEntity.ok(new DadosUnicoInstituto(instituto));
     }
-    @GetMapping("/{ac}")
+    @GetMapping("/ac={ac}")
     public ResponseEntity encontrarAcronimo(@PathVariable String ac){
         var instituto = repository.findAllByAcronimo(ac);
+
+        return ResponseEntity.ok(new DadosUnicoInstituto(instituto));
+    }
+
+    @GetMapping("/nome={nome}")
+    public ResponseEntity encontrarNome(@PathVariable String nome){
+        var instituto = repository.findAllByNome(nome);
 
         return ResponseEntity.ok(new DadosUnicoInstituto(instituto));
     }

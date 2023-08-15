@@ -12,4 +12,6 @@ public interface InstitutoRepository extends JpaRepository<Instituto, Long> {
 
     Instituto findAllByAcronimo(String acronimo);
 
+    Instituto findAllByNome(String nome);
+
 }

@@ -14,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/instituto")
+@CrossOrigin
 public class InstitutoController {
 
     @Autowired
@@ -29,7 +30,7 @@ public class InstitutoController {
     }
 
     @GetMapping()
-    public ResponseEntity <Page<DadosListagemInstituto>> listar(@PageableDefault (size = 10, sort = {"acronimo"} ) Pageable paginacao) {
+    public ResponseEntity <Page<DadosListagemInstituto>> listar(@PageableDefault (size = 2, sort = {"acronimo"} ) Pageable paginacao) {
         var page = repository.findAllByStatusTrue(paginacao).map(DadosListagemInstituto::new);
         return ResponseEntity.ok(page);
     }

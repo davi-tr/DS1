@@ -1,0 +1,13 @@
+br\com\femass\ProjetoDS1\controller\InstitutoController.class
+br\com\femass\ProjetoDS1\domain\instituto\InstitutoRepository.class
+br\com\femass\ProjetoDS1\domain\instituto\DadosCadastroInstituto.class
+br\com\femass\ProjetoDS1\infra\exception\ErroTrat$MensagemSQL.class
+br\com\femass\ProjetoDS1\infra\exception\ErroTrat.class
+br\com\femass\ProjetoDS1\domain\instituto\DadosUnicoInstituto.class
+br\com\femass\ProjetoDS1\infra\exception\ErroTrat$DadosSQL.class
+br\com\femass\ProjetoDS1\domain\instituto\DadosAtualizarInstituto.class
+br\com\femass\ProjetoDS1\domain\ValidacaoException.class
+br\com\femass\ProjetoDS1\domain\instituto\Instituto.class
+br\com\femass\ProjetoDS1\infra\springdoc\SwaggerConfiguration.class
+br\com\femass\ProjetoDS1\ProjetoDs1Application.class
+br\com\femass\ProjetoDS1\domain\instituto\DadosListagemInstituto.class

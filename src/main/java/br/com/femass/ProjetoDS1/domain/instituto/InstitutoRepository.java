@@ -10,8 +10,10 @@ public interface InstitutoRepository extends JpaRepository<Instituto, Long> {
 
     Page<Instituto> findAllByStatusTrue(Pageable paginacao);
 
-    Instituto findAllByAcronimo(String acronimo);
+    Instituto getReferenceByIdAndStatusTrue(Long id);
 
-    Instituto findAllByNome(String nome);
+    Instituto findAllByAcronimoAndStatusTrue(String acronimo);
+
+    Instituto findAllByNomeAndStatusTrue(String nome);
 
 }

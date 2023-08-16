@@ -36,20 +36,20 @@ public class InstitutoController {
 
     @GetMapping("/id={id}")
     public ResponseEntity encontrarPorID(@PathVariable Long id){
-        var instituto = repository.getReferenceById(id);
+        var instituto = repository.getReferenceByIdAndStatusTrue(id);
 
         return ResponseEntity.ok(new DadosUnicoInstituto(instituto));
     }
     @GetMapping("/ac={ac}")
     public ResponseEntity encontrarAcronimo(@PathVariable String ac){
-        var instituto = repository.findAllByAcronimo(ac);
+        var instituto = repository.findAllByAcronimoAndStatusTrue(ac);
 
         return ResponseEntity.ok(new DadosUnicoInstituto(instituto));
     }
 
     @GetMapping("/nome={nome}")
     public ResponseEntity encontrarNome(@PathVariable String nome){
-        var instituto = repository.findAllByNome(nome);
+        var instituto = repository.findAllByNomeAndStatusTrue(nome);
 
         return ResponseEntity.ok(new DadosUnicoInstituto(instituto));
     }

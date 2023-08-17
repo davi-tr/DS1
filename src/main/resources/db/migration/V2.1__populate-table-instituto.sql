@@ -7,7 +7,7 @@ VALUES ('Instituto Federal', 'IFF', 1)
 ON DUPLICATE KEY UPDATE ACRONIMO = ACRONIMO;
 
 INSERT INTO instituto (NOME, ACRONIMO, STATUS)
-VALUES ('Universidade Estadual do Rio de Janeiro', 'ACR', 1)
+VALUES ('Universidade Estadual do Rio de Janeiro', 'UERJ', 1)
 ON DUPLICATE KEY UPDATE ACRONIMO = ACRONIMO;
 
 INSERT INTO instituto (NOME, ACRONIMO, STATUS)

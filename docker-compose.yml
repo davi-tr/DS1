@@ -1,5 +1,19 @@
 version: "3"
 services:
+  mysqldb:
+    container_name: mysqldb
+    image: mysql
+    volumes:
+      - db-volume:/var/lib/mysql
+    ports:
+      - 3307:3306
+    expose:
+      - '3306'
+    environment:
+      MYSQL_DATABASE: DSaula
+      MYSQL_ROOT_PASSWORD: Banco123
+      MYSQL_ROOT_USER: admin
+  
   springboot-app:
     image: springboot-app
     restart: always
@@ -10,13 +24,6 @@ services:
       MYSQL_HOST: mysqldb
       MYSQL_PORT: 3306
 
-  mysqldb:
-    container_name: mysqldb
-    image: mysql
-    volumes:
-      - ./dataStore:/var/lib/mysql
-    ports:
-      - 3307:3306
-    environment:
-      MYSQL_DATABASE: DSaula
-      MYSQL_ROOT_PASSWORD: Banco123
+volumes:
+  db-volume:
+

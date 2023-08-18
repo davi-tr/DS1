@@ -1,17 +1,6 @@
 version: "3"
 services:
-  mysqldb:
-    container_name: mysqldb
-    image: mysql
-    volumes:
-      - db-volume:/var/lib/mysql
-    ports:
-      - 3307:3306
-    expose:
-      - '3306'
-    environment:
-      MYSQL_DATABASE: DSaula
-      MYSQL_ROOT_PASSWORD: Banco123
+
   
   springboot-app:
     image: springboot-app

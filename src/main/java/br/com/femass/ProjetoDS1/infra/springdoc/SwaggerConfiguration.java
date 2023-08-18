@@ -12,20 +12,12 @@ import java.util.List;
 @Configuration
 public class SwaggerConfiguration {
 
-    @Value("${bezkoder.openapi.dev-url}")
-    private String devUrl;
     @Bean
     public OpenAPI myOpenAPI() {
-        Server devServer = new Server();
-        devServer.setUrl(devUrl);
-        devServer.setDescription("Server URL in Development environment");
-
-
-        Info info =  new Info()
-                .title("API instituto")
-                .version("1.0");
-
-        return new OpenAPI().info(info).servers(List.of(devServer));
+        return new OpenAPI()
+                .info(new Info().title("Projeto DS1")
+                        .description("Nesta pagina temos todas as rotas para a API do projeto de D1")
+                        .version("1.0 - Crud Instituto"));
     }
 
 }

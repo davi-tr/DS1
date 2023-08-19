@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-
+//onde vai controlando
 public interface InstitutoRepository extends JpaRepository<Instituto, Long> {
 
     Page<Instituto> findAllByStatusTrue(Pageable paginacao);

@@ -30,7 +30,7 @@ public class InstitutoController {
     }
 
     @GetMapping()
-    public ResponseEntity <Page<DadosListagemInstituto>> listar(@PageableDefault (sort = {"acronimo"} ) Pageable paginacao) {
+    public ResponseEntity <Page<DadosListagemInstituto>> listar(@PageableDefault (sort = {"acronimo"}, size = 1000 ) Pageable paginacao) {
         var page = repository.findAllByStatusTrue(paginacao).map(DadosListagemInstituto::new);
         return ResponseEntity.ok(page);
     }

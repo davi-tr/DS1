@@ -7,6 +7,7 @@ import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class InstitutoController {
     }
 
     @GetMapping()
-    public ResponseEntity <Page<DadosListagemInstituto>> listar(@PageableDefault (sort = {"acronimo"}, size = 1000 ) Pageable paginacao) {
+    public ResponseEntity <Page<DadosListagemInstituto>> listar(@PageableDefault (sort = {"id"}, direction = Sort.Direction.DESC, size = Integer.MAX_VALUE ) Pageable paginacao) {
         var page = repository.findAllByStatusTrue(paginacao).map(DadosListagemInstituto::new);
         return ResponseEntity.ok(page);
     }

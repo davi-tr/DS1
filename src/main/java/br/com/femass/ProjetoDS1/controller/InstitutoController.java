@@ -15,7 +15,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/instituto")
-@CrossOrigin
 public class InstitutoController {
 
     @Autowired

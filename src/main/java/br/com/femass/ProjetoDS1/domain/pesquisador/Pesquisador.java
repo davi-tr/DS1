@@ -3,6 +3,7 @@ package br.com.femass.ProjetoDS1.domain.pesquisador;
 
 import br.com.femass.ProjetoDS1.domain.instituto.Instituto;
 import br.com.femass.ProjetoDS1.domain.instituto.InstitutoRepository;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "pesquisador")
 @Entity(name= "Pesquisador")
 @Getter
@@ -30,9 +32,11 @@ public class Pesquisador {
     private String nome;
     private boolean status;
     @ManyToOne
-    @JoinColumn(name = "instituto_id")
+    @JoinColumn(name = "idISTITUTO")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Instituto instituto;
 
+    private transient InstitutoRepository repository;
     public void setInstituto(Instituto instituto) {
         this.instituto = instituto;
     }
@@ -42,9 +46,6 @@ public class Pesquisador {
         String valoresXML[] = LerXML(EncontrarXML(dados.idPesquisador()));
         this.idXML = valoresXML[0];
         this.nome = valoresXML[1];
-
-        this.instituto = new Instituto();
-
     }
 
     public static String EncontrarXML(String idPesquisador){

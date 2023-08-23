@@ -9,6 +9,6 @@ public record DadosCadastroPesquisador(
         String idPesquisador,
         @Valid
         @NotNull
-        DadosUnicoInstituto instituto
+        Long idinstituto
 ) {
 }

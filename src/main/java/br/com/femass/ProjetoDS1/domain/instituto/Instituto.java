@@ -3,10 +3,12 @@
 
 package br.com.femass.ProjetoDS1.domain.instituto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 // Define que esta classe representa uma entidade no banco de dados com o nome "instituto".
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "instituto")
 @Entity(name = "Instituto")
 @Getter

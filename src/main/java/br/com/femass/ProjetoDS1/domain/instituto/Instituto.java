@@ -3,6 +3,7 @@
 
 package br.com.femass.ProjetoDS1.domain.instituto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,6 +24,7 @@ public class Instituto {
 
     private String nome;
     private String acronimo;
+    @JsonIgnore
     private boolean status;
 
     // Construtor que recebe dados de cadastro para criar um novo Instituto.

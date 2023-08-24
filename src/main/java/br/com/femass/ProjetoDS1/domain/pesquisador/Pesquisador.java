@@ -48,6 +48,15 @@ public class Pesquisador {
         this.nome = valoresXML[1];
     }
 
+    public void atualizar(DadosAtualizarPesquisador dados, Instituto instituto){
+        if (dados.idNovoInstituto() != null){
+            this.instituto = instituto;
+        }
+    }
+    public void excluir(){
+        this.status = false;
+    }
+
     public static String EncontrarXML(String idPesquisador){
         String diretorio = "./Curriculos_XML";
 

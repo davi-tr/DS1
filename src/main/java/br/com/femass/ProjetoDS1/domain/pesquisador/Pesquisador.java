@@ -104,6 +104,13 @@ public class Pesquisador {
             String numeroIdentificador = idfind.getAttribute("NUMERO-IDENTIFICADOR");
             String nomeCompleto = dadosGeraisElement.getAttribute("NOME-COMPLETO");
 
+            if (numeroIdentificador == ""){
+                numeroIdentificador = inputFile.getName();
+                if (numeroIdentificador.endsWith(".xml")) {
+                    numeroIdentificador = numeroIdentificador.substring(0, numeroIdentificador.length() - 4);
+                }
+            }
+
             return new String[] { numeroIdentificador, nomeCompleto };
         } catch (Exception e) {
             e.printStackTrace();

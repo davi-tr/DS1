@@ -27,6 +27,15 @@ public class PesquisadorController {
     @PostMapping
     public ResponseEntity cadastro(@RequestBody @Valid DadosCadastroPesquisador dados, UriComponentsBuilder uriBuilder){
         var pesquisador = new Pesquisador(dados);
+        var pesquisadorBusca = repository.getReferenceByidXMLAndStatusFalse(dados.idPesquisador());
+        if (pesquisadorBusca != null){
+            pesquisadorBusca.setStatus(true);
+            var instituto = repositoryInstituto.getReferenceById(dados.idinstituto());
+            pesquisadorBusca.setInstituto(instituto);
+            repository.save(pesquisadorBusca);
+            var uri = uriBuilder.path("pesquisador/id={id}").buildAndExpand(pesquisadorBusca.getId()).toUri();
+            return ResponseEntity.created(uri).body(new DadosUnicoPesquisador(pesquisadorBusca));
+        }
         var instituto = repositoryInstituto.getReferenceById(dados.idinstituto());
         pesquisador.setInstituto(instituto);
         repository.save(pesquisador);

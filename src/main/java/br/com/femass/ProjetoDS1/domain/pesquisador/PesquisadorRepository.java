@@ -18,4 +18,7 @@ public interface PesquisadorRepository extends JpaRepository<Pesquisador, Long> 
     Pesquisador findAllByIdXMLAndStatusTrue(String idXML);
 
     Page<Pesquisador> findAllByInstitutoIdAndStatusTrue(Long institutoId, Pageable paginacao);
+
+
+    Pesquisador getReferenceByidXMLAndStatusFalse(String s);
 }

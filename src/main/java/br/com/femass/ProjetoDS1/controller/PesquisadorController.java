@@ -10,10 +10,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
+
 @RequestMapping("/pesquisador")
 public class PesquisadorController {
 
@@ -34,7 +36,7 @@ public class PesquisadorController {
     }
 
     @GetMapping()
-    public ResponseEntity <Page<DadosListagemPesquisador>> listar(@PageableDefault (sort = {"id"}, direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao){
+    public ResponseEntity <Page<DadosListagemPesquisador>> listar(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao){
         var page = repository.findAllByStatusTrue(paginacao).map(DadosListagemPesquisador::new);
         return ResponseEntity.ok(page);
     }

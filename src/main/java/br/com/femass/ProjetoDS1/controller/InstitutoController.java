@@ -34,6 +34,10 @@ public class InstitutoController {
     public ResponseEntity cadastro(@RequestBody @Valid DadosCadastroInstituto dados, UriComponentsBuilder uriBuilder){
         // Cria um novo Instituto com base nos dados fornecidos e o salva no repositório.
         var instituto = new Instituto(dados);
+        var institutoBusca = repository.findAllByAcronimoAndStatusTrue(dados.acronimo());
+        if(institutoBusca != null){
+            return ResponseEntity.badRequest().body(new MensagemErro("Acronimo já existe"));
+        }
         repository.save(instituto);
 
         // Gera uma URI para o novo Instituto e retorna uma resposta com o Instituto criado.

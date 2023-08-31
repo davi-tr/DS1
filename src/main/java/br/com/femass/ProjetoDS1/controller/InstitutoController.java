@@ -4,6 +4,8 @@
 package br.com.femass.ProjetoDS1.controller;
 
 import br.com.femass.ProjetoDS1.domain.instituto.*;
+import br.com.femass.ProjetoDS1.domain.pesquisador.PesquisadorRepository;
+import br.com.femass.ProjetoDS1.infra.exception.ErroTrat;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.apache.coyote.Response;
@@ -24,6 +26,8 @@ public class InstitutoController {
     // Injeção de dependência do repositório do Instituto.
     @Autowired
     private InstitutoRepository repository;
+    @Autowired
+    private PesquisadorRepository repositoryPesquisador;
 
     // Método para criar um novo Instituto a partir dos dados fornecidos.
     @PostMapping()
@@ -74,6 +78,10 @@ public class InstitutoController {
     public ResponseEntity deletarInstituto(@PathVariable Long id){
         // Obtém uma referência para o Instituto pelo ID, marca-o como excluído e o salva no repositório.
         var instituto = repository.getReferenceById(id);
+        var pesquisador = repositoryPesquisador.findAllByInstitutoIdAndStatusTrue(id);
+        if (pesquisador.size()!=0){
+            return ResponseEntity.badRequest().body(new MensagemErro("O instituto possui pesquisadores cadastrados"));
+        }
         instituto.excluir();
         repository.save(instituto);
 
@@ -91,5 +99,9 @@ public class InstitutoController {
 
         // Retorna os dados atualizados do Instituto.
         return ResponseEntity.ok(new DadosUnicoInstituto(instituto));
+    }
+
+    private record MensagemErro(String mensagem){
+
     }
 }

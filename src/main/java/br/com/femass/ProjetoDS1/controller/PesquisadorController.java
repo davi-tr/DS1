@@ -36,6 +36,10 @@ public class PesquisadorController {
             var uri = uriBuilder.path("pesquisador/id={id}").buildAndExpand(pesquisadorBusca.getId()).toUri();
             return ResponseEntity.created(uri).body(new DadosUnicoPesquisador(pesquisadorBusca));
         }
+        var pesquisadorEncontra = repository.getReferenceByidXMLAndStatusTrue(dados.idPesquisador());
+        if(pesquisadorEncontra !=null){
+            return ResponseEntity.badRequest().body(new MensagemErro("Pesquisador já existe"));
+        }
         var instituto = repositoryInstituto.getReferenceById(dados.idinstituto());
         pesquisador.setInstituto(instituto);
         repository.save(pesquisador);
@@ -47,6 +51,7 @@ public class PesquisadorController {
     @GetMapping()
     public ResponseEntity <Page<DadosListagemPesquisador>> listar(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao){
         var page = repository.findAllByStatusTrue(paginacao).map(DadosListagemPesquisador::new);
+        System.out.println("rota 1");
         return ResponseEntity.ok(page);
     }
 
@@ -86,6 +91,10 @@ public class PesquisadorController {
     public ResponseEntity<Page<DadosListagemPesquisador>> listarInstitutos(@PathVariable Long id, @PageableDefault (sort = {"id"}, direction = Sort.Direction.DESC, size = Integer.MAX_VALUE ) Pageable paginacao) {
          var page = repository.findAllByInstitutoIdAndStatusTrue(id, paginacao).map(DadosListagemPesquisador::new);
          return ResponseEntity.ok(page);
+    }
+
+    private record MensagemErro(String mensagem){
+
     }
 
 }

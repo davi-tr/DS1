@@ -35,12 +35,11 @@ public class Producao{
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "pesquisadorListado")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Set<Pesquisador> pesquisadores = new HashSet<>();
+    private List<Pesquisador> pesquisadores;
 
     public Producao(DadosCadastroProducao dados){
         this.status = true;
-        this.pesquisadores = EncontrarXML(EncontrarXML(dados.idPesquisador()));
-
+        String controle = EncontrarXML(dados.idPesquisador());
     }
 
     public static String EncontrarXML(String idPesquisador){
@@ -77,7 +76,7 @@ public class Producao{
     }
 
 
-    public static ArrayList<String> encontrarProducao(String caminho) {
+    public static List<String> encontrarProducao(String caminho) {
         try {
             File inputFile = new File(caminho);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -87,16 +86,16 @@ public class Producao{
             document.getDocumentElement().normalize();
 
             ArrayList<String> artigos = new ArrayList<>();
-            NodeList trabalhosEmEventosList = document.getElementsByTagName("TRABALHO-EM-EVENTOS");
+            NodeList artigoList = document.getElementsByTagName("ARTIGO-PUBLICADO");
 
-            for (int i = 0; i < trabalhosEmEventosList.getLength(); i++) {
-                Node node = trabalhosEmEventosList.item(i);
+            for (int i = 0; i < artigoList.getLength(); i++) {
+                Node node = artigoList.item(i);
 
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element elementoTrabalho = (Element) node;
-                    String tituloDoTrabalho = elementoTrabalho.getAttribute("TITULO-DO-TRABALHO");
-                    String anoDoTrabalho = elementoTrabalho.getAttribute("ANO-DO-TRABALHO");
-                    artigos.add("Título: " + tituloDoTrabalho + ", Ano: " + anoDoTrabalho);
+                    Element elementoArtigo = (Element) node;
+                    String tituloDoArtigo = elementoArtigo.getAttribute("TITULO-DO-ARTIGO");
+                    String anoDoArtigo = elementoArtigo.getAttribute("ANO-DO-ARTIGO");
+                    artigos.add("Título: " + tituloDoArtigo + ", Ano: " + anoDoArtigo);
                 }
             }
 

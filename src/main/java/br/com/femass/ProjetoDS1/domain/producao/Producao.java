@@ -35,7 +35,7 @@ public class Producao{
     @Enumerated(EnumType.STRING)
     private Tipo tipo;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "producao_resultante",
                         joinColumns = @JoinColumn(name ="id_producao"),
                         inverseJoinColumns = @JoinColumn(name = "id_pesquisador"))

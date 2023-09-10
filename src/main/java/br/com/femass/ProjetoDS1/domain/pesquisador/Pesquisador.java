@@ -33,7 +33,7 @@ public class Pesquisador {
 
     private String nome;
     private boolean status;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idISTITUTO")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Instituto instituto;

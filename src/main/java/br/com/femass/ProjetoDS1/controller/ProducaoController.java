@@ -1,5 +1,6 @@
 package br.com.femass.ProjetoDS1.controller;
 
+import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
 import br.com.femass.ProjetoDS1.domain.pesquisador.PesquisadorRepository;
 import br.com.femass.ProjetoDS1.domain.producao.*;
 import jakarta.validation.Valid;
@@ -28,7 +29,8 @@ public class ProducaoController {
 
         var producao = new Producao(dados);
         var finded = producao.encontrarProducao(producao.EncontrarXML(dados.idPesquisador()));
-        Long idProd = null;
+        var idProd = new Pesquisador();
+        boolean flag = false;
         for (var tot : finded) {
             String[] partes = tot.split("-");
             if (partes.length == 2) {
@@ -42,6 +44,9 @@ public class ProducaoController {
                 prod.setAno(anoDoArtigo);
 
                 var pesquisadorFind = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(dados.idPesquisador());
+                if(pesquisadorFind == null){
+                    return ResponseEntity.badRequest().build();
+                }
 
                 var pesquisador = repositoryPesquisador.findAllByIdXMLAndIdAndStatusTrue(dados.idPesquisador(), pesquisadorFind.getId());
                 System.out.println(pesquisador);
@@ -50,17 +55,21 @@ public class ProducaoController {
 
                 System.out.println(prod);
                 repository.save(prod);
-                idProd = pesquisadorFind.getId();
+                if (flag == false) {
+                    idProd = pesquisadorFind;
+                    flag = true;
+                }
             }
 
 
         }
         if (!finded.isEmpty()){
-            var findAll = repository.findAllByid_pesquisadorAndStatusTrue(idProd);
+            System.out.println("batata");
+            var findAll = repository.findAllByPesquisadorIdAndStatusTrue(idProd.getId()).stream().map(DadosListagemProducao::new);
+            System.out.println(findAll);
+            var uri = uriBuilder.path("producao/id={id}").buildAndExpand(repositoryPesquisador.getReferenceByIdAndStatusTrue(idProd.getId())).toUri();
 
-            var uri = uriBuilder.path("producao/id={id}").buildAndExpand(repositoryPesquisador.getReferenceByIdAndStatusTrue(idProd)).toUri();
-
-            return ResponseEntity.created(uri).body(findAll);
+            return ResponseEntity.ok(findAll);
         }
 
         return ResponseEntity.badRequest().body(new MensagemErro("Não a artigos no XML"));

@@ -3,6 +3,7 @@ package br.com.femass.ProjetoDS1.domain.pesquisador;
 
 import br.com.femass.ProjetoDS1.domain.instituto.Instituto;
 import br.com.femass.ProjetoDS1.domain.instituto.InstitutoRepository;
+import br.com.femass.ProjetoDS1.domain.producao.Producao;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,6 +14,7 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.List;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "pesquisador")
@@ -35,6 +37,10 @@ public class Pesquisador {
     @JoinColumn(name = "idISTITUTO")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Instituto instituto;
+
+    @ManyToMany(mappedBy = "pesquisador")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<Producao> producao;
 
     private transient InstitutoRepository repository;
     public void setInstituto(Instituto instituto) {

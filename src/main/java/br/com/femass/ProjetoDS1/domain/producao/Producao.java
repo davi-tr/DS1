@@ -32,14 +32,22 @@ public class Producao{
     private String titulo;
     private String ano;
     private boolean status;
+    @Enumerated(EnumType.STRING)
+    private Tipo tipo;
+
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pesquisadorListado")
+    @JoinTable(name = "producao_resultante",
+                        joinColumns = @JoinColumn(name ="id_producao"),
+                        inverseJoinColumns = @JoinColumn(name = "id_pesquisador"))
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<Pesquisador> pesquisadores;
+    private List<Pesquisador> pesquisador;
+
+
 
     public Producao(DadosCadastroProducao dados){
         this.status = true;
         String controle = EncontrarXML(dados.idPesquisador());
+        this.tipo = Tipo.ARTIGO;
     }
 
     public static String EncontrarXML(String idPesquisador){
@@ -87,15 +95,16 @@ public class Producao{
 
             ArrayList<String> artigos = new ArrayList<>();
             NodeList artigoList = document.getElementsByTagName("ARTIGO-PUBLICADO");
+            NodeList artigoList2 = document.getElementsByTagName("DADOS-BASICOS-DO-ARTIGO");
 
-            for (int i = 0; i < artigoList.getLength(); i++) {
-                Node node = artigoList.item(i);
+            for (int i = 0; i < artigoList2.getLength(); i++) {
+                Node node = artigoList2.item(i);
 
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element elementoArtigo = (Element) node;
                     String tituloDoArtigo = elementoArtigo.getAttribute("TITULO-DO-ARTIGO");
                     String anoDoArtigo = elementoArtigo.getAttribute("ANO-DO-ARTIGO");
-                    artigos.add("Título: " + tituloDoArtigo + ", Ano: " + anoDoArtigo);
+                    artigos.add(tituloDoArtigo + "-" + anoDoArtigo);
                 }
             }
 

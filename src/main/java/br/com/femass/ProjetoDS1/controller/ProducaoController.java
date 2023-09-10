@@ -1,6 +1,5 @@
 package br.com.femass.ProjetoDS1.controller;
 
-import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
 import br.com.femass.ProjetoDS1.domain.pesquisador.PesquisadorRepository;
 import br.com.femass.ProjetoDS1.domain.producao.*;
 import jakarta.validation.Valid;
@@ -11,10 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @RestController
 @RequestMapping("/producao")
@@ -33,6 +28,7 @@ public class ProducaoController {
 
         var producao = new Producao(dados);
         var finded = producao.encontrarProducao(producao.EncontrarXML(dados.idPesquisador()));
+        Long idProd = null;
         for (var tot : finded) {
             String[] partes = tot.split("-");
             if (partes.length == 2) {
@@ -54,14 +50,24 @@ public class ProducaoController {
 
                 System.out.println(prod);
                 repository.save(prod);
-
+                idProd = pesquisadorFind.getId();
             }
 
 
         }
+        if (!finded.isEmpty()){
+            var findAll = repository.findAllByid_pesquisadorAndStatusTrue(idProd);
 
-        var uri = uriBuilder.path("producao/id={id}").buildAndExpand(producao.getId()).toUri();
-        return ResponseEntity.created(uri).body(new DadosUnicoProducao(producao));
+            var uri = uriBuilder.path("producao/id={id}").buildAndExpand(repositoryPesquisador.getReferenceByIdAndStatusTrue(idProd)).toUri();
+
+            return ResponseEntity.created(uri).body(findAll);
+        }
+
+        return ResponseEntity.badRequest().body(new MensagemErro("Não a artigos no XML"));
+
+
+    }
+    private record MensagemErro(String mensagem){
 
     }
 }

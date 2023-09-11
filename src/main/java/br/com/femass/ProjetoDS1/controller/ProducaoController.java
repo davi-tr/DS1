@@ -5,11 +5,12 @@ import br.com.femass.ProjetoDS1.domain.pesquisador.PesquisadorRepository;
 import br.com.femass.ProjetoDS1.domain.producao.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
@@ -25,15 +26,17 @@ public class ProducaoController {
 
 
     @PostMapping
-    public ResponseEntity cadastro(@RequestBody @Valid DadosCadastroProducao dados, UriComponentsBuilder uriBuilder){
+    public ResponseEntity <Page<DadosListagemProducao>> cadastro(@PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC, size = Integer.MAX_VALUE ) Pageable paginacao, @RequestBody @Valid DadosCadastroProducao dados, UriComponentsBuilder uriBuilder){
 
         var producao = new Producao(dados);
         var finded = producao.encontrarProducao(producao.EncontrarXML(dados.idPesquisador()));
         var idProd = new Pesquisador();
         boolean flag = false;
+        int conta = 0;
         for (var tot : finded) {
-            String[] partes = tot.split("-");
+            String[] partes = tot.split("-(\\d)");
             if (partes.length == 2) {
+                conta++;
                 var prod = new Producao();
                 prod.setStatus(true);
                 prod.setTipo(Tipo.ARTIGO);
@@ -45,11 +48,29 @@ public class ProducaoController {
 
                 var pesquisadorFind = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(dados.idPesquisador());
                 if(pesquisadorFind == null){
+                    System.out.println("pesquisador não existe no banco");
                     return ResponseEntity.badRequest().build();
                 }
 
                 var pesquisador = repositoryPesquisador.findAllByIdXMLAndIdAndStatusTrue(dados.idPesquisador(), pesquisadorFind.getId());
-                System.out.println(pesquisador);
+                var prodRepo = repository.getReferenceByTitulo(tituloDoArtigo);
+                var pesquisadorArtigo = repository.findAllByPesquisadorIdAndTituloAndStatusTrue(pesquisadorFind.getId(), tituloDoArtigo);
+                if(!pesquisadorArtigo.isEmpty()){
+                    if (conta>1){
+                        System.out.println("item já cadastrado");
+                        continue;
+                    }else {
+                        return ResponseEntity.badRequest().build();
+                    }
+                }
+                if(prodRepo != null){
+                    var pesquisadorNovo = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(dados.idPesquisador());
+                    prodRepo.adicionar(pesquisadorNovo);
+
+                    System.out.println(prodRepo);
+                    repository.save(prodRepo);
+                    idProd = pesquisadorFind;
+                }
 
                 prod.setPesquisador(pesquisador);
 
@@ -65,17 +86,25 @@ public class ProducaoController {
         }
         if (!finded.isEmpty()){
             System.out.println("batata");
-            var findAll = repository.findAllByPesquisadorIdAndStatusTrue(idProd.getId()).stream().map(DadosListagemProducao::new);
-            System.out.println(findAll);
+            var findAll = repository.findAllByPesquisadorIdAndStatusTrue(idProd.getId(), paginacao).map(DadosListagemProducao::new);
+
             var uri = uriBuilder.path("producao/id={id}").buildAndExpand(repositoryPesquisador.getReferenceByIdAndStatusTrue(idProd.getId())).toUri();
 
-            return ResponseEntity.ok(findAll);
+            return ResponseEntity.created(uri).body(findAll);
         }
 
-        return ResponseEntity.badRequest().body(new MensagemErro("Não a artigos no XML"));
+        return ResponseEntity.badRequest().build();
 
 
     }
+
+    @GetMapping
+    public ResponseEntity <Page<DadosListagemProducao>>listar (@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao){
+        var page = repository.findAllByStatusTrue(paginacao).map(DadosListagemProducao::new);
+        return ResponseEntity.ok(page);
+    }
+
+
     private record MensagemErro(String mensagem){
 
     }

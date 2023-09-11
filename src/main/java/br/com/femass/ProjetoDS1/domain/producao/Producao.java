@@ -50,6 +50,9 @@ public class Producao{
         this.tipo = Tipo.ARTIGO;
     }
 
+    public void adicionar (Pesquisador NovoPesquisador){
+        pesquisador.add(NovoPesquisador);
+    }
     public static String EncontrarXML(String idPesquisador){
         String diretorio = "./Curriculos_XML";
 
@@ -104,7 +107,7 @@ public class Producao{
                     Element elementoArtigo = (Element) node;
                     String tituloDoArtigo = elementoArtigo.getAttribute("TITULO-DO-ARTIGO");
                     String anoDoArtigo = elementoArtigo.getAttribute("ANO-DO-ARTIGO");
-                    artigos.add(tituloDoArtigo + "-" + anoDoArtigo);
+                    artigos.add(tituloDoArtigo + "-2" + anoDoArtigo);
                 }
             }
 

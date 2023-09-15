@@ -1,0 +1,1 @@
+ALTER TABLE producao ADD status TINYINT NOT NULL;

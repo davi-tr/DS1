@@ -12,6 +12,7 @@ public interface ProducaoRepository extends JpaRepository<Producao, Long> {
 
 
 
+    @Query("SELECT p FROM Producao p JOIN p.pesquisador pesq WHERE pesq.id = :idPesquisador AND p.status = true")
     Page<Producao> findAllByPesquisadorIdAndStatusTrue(Long idPesquisador, Pageable paginacao);
 
     Producao getReferenceByTitulo(String tituloDoArtigo);
@@ -19,4 +20,7 @@ public interface ProducaoRepository extends JpaRepository<Producao, Long> {
     List<Producao> findAllByPesquisadorIdAndTituloAndStatusTrue (Long id, String titulo);
 
     Page<Producao> findAllByStatusTrue(Pageable paginacao);
+
+    @Query("SELECT p FROM Producao p WHERE (SELECT COUNT(pes) FROM p.pesquisador pes) > 1")
+    Page<Producao> encontrarProducaoComMaisDeUmPesquisador(Pageable paginacao);
 }

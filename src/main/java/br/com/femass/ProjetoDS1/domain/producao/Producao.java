@@ -35,7 +35,7 @@ public class Producao{
     @Enumerated(EnumType.STRING)
     private Tipo tipo;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "producao_resultante",
                         joinColumns = @JoinColumn(name ="id_producao"),
                         inverseJoinColumns = @JoinColumn(name = "id_pesquisador"))
@@ -87,7 +87,7 @@ public class Producao{
     }
 
 
-    public static List<String> encontrarProducao(String caminho) {
+    public static List<String> encontrarArtigos(String caminho) {
         try {
             File inputFile = new File(caminho);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -107,6 +107,38 @@ public class Producao{
                     Element elementoArtigo = (Element) node;
                     String tituloDoArtigo = elementoArtigo.getAttribute("TITULO-DO-ARTIGO");
                     String anoDoArtigo = elementoArtigo.getAttribute("ANO-DO-ARTIGO");
+                    artigos.add(tituloDoArtigo + "-2" + anoDoArtigo);
+                }
+            }
+
+            return artigos;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<String> encontrarLivroeCapitulo (String caminho){
+        try {
+            File inputFile = new File(caminho);
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(inputFile);
+
+            document.getDocumentElement().normalize();
+
+            ArrayList<String> artigos = new ArrayList<>();
+            NodeList artigoList = document.getElementsByTagName("LIVROS-E-CAPITULOS");
+            NodeList artigoList2 = document.getElementsByTagName("DADOS-BASICOS-DO-LIVRO");
+
+            for (int i = 0; i < artigoList2.getLength(); i++) {
+                Node node = artigoList2.item(i);
+
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element elementoArtigo = (Element) node;
+                    String tituloDoArtigo = elementoArtigo.getAttribute("TITULO-DO-LIVRO");
+                    String anoDoArtigo = elementoArtigo.getAttribute("ANO");
                     artigos.add(tituloDoArtigo + "-2" + anoDoArtigo);
                 }
             }

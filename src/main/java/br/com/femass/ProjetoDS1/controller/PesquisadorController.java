@@ -93,8 +93,8 @@ public class PesquisadorController {
          return ResponseEntity.ok(page);
     }
 
-    private record MensagemErro(String mensagem){
+
+    private record MensagemErro(String mensagem) {
 
     }
-
 }

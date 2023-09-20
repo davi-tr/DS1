@@ -1,5 +1,6 @@
 package br.com.femass.ProjetoDS1.controller;
 
+import br.com.femass.ProjetoDS1.domain.ValidacaoException;
 import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
 import br.com.femass.ProjetoDS1.domain.pesquisador.PesquisadorRepository;
 import br.com.femass.ProjetoDS1.domain.producao.*;
@@ -36,6 +37,7 @@ public class ProducaoController {
         int conta = 0;
         for (var tot : finded) {
             String[] partes = tot.split("-(\\d)");
+
             if (partes.length == 2) {
                 conta++;
                 var prod = new Producao();
@@ -49,19 +51,16 @@ public class ProducaoController {
 
                 var pesquisadorFind = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(dados.idPesquisador());
                 if(pesquisadorFind == null){
-                    System.out.println("pesquisador não existe no banco");
-                    return ResponseEntity.badRequest().build();
+                    throw new ValidacaoException("Pesquisador não existe no banco");
                 }
 
                 var pesquisador = repositoryPesquisador.findAllByIdXMLAndIdAndStatusTrue(dados.idPesquisador(), pesquisadorFind.getId());
                 var prodRepo = repository.getReferenceByTitulo(tituloDoArtigo);
                 var pesquisadorArtigo = repository.findAllByPesquisadorIdAndTituloAndStatusTrue(pesquisadorFind.getId(), tituloDoArtigo);
                 if(!pesquisadorArtigo.isEmpty()){
-                    if (conta>1) {
-                        System.out.println("item já cadastrado");
-                        continue;
-                    }
+                   continue;
                 }
+
                 if(prodRepo != null){
                     var pesquisadorNovo = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(dados.idPesquisador());
                     prodRepo.adicionar(pesquisadorNovo);
@@ -69,6 +68,7 @@ public class ProducaoController {
                     System.out.println(prodRepo);
                     repository.save(prodRepo);
                     idProd = pesquisadorFind;
+                    continue;
                 }
 
                 prod.setPesquisador(pesquisador);
@@ -143,7 +143,7 @@ public class ProducaoController {
             return ResponseEntity.created(uri).body(findAll);
         }
 
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
 
 
     }
@@ -154,13 +154,13 @@ public class ProducaoController {
         return ResponseEntity.ok(page);
     }
 
-
-    private record MensagemErro(String mensagem){
-
-    }
     @GetMapping("/maisdeumpesquisador")
     public ResponseEntity <Page<DadosListagemProducao>> listarMaisDeUm (@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao){
         var page = repository.encontrarProducaoComMaisDeUmPesquisador(paginacao).map(DadosListagemProducao::new);
         return ResponseEntity.ok(page);
+    }
+
+    private record MensagemError(String mensagem){
+
     }
 }

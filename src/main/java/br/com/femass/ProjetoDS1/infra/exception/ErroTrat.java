@@ -35,7 +35,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
         }
         @ExceptionHandler(ValidacaoException.class)
         public ResponseEntity tratarErrorRegra(ValidacaoException ex){
-            return ResponseEntity.badRequest().body(ex.getMessage());
+            return ResponseEntity.badRequest().body(new MensagemErro(ex.getMessage()));
         }
 
         private record DadosSQL(String mensagem){
@@ -45,6 +45,9 @@ import java.sql.SQLIntegrityConstraintViolationException;
         }
 
         private record MensagemSQL(String mensagem){
+
+        }
+        private record MensagemErro(String mensagem){
 
         }
 

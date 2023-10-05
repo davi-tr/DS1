@@ -23,15 +23,13 @@ public class ProducaoController {
     private ProducaoRepository repository;
 
 
-
-
-
     @PostMapping
     public ResponseEntity <Page<DadosListagemProducao>> cadastro(@PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC, size = Integer.MAX_VALUE ) Pageable paginacao, @RequestBody @Valid DadosCadastroProducao dados, UriComponentsBuilder uriBuilder){
 
         var producao = new Producao(dados);
         var finded = producao.encontrarArtigos(producao.EncontrarXML(dados.idPesquisador()));
         var livros = producao.encontrarLivroeCapitulo(producao.EncontrarXML(dados.idPesquisador()));
+        var teste = producao.encontrarAutoresComplementares(producao.EncontrarXML(dados.idPesquisador()));
         var idProd = new Pesquisador();
         boolean flag = false;
         int conta = 0;

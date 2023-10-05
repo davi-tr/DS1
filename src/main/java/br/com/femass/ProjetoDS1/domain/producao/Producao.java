@@ -42,6 +42,13 @@ public class Producao{
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Pesquisador> pesquisador;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "producao_resultante",
+            joinColumns = @JoinColumn(name ="id_producao"),
+            inverseJoinColumns = @JoinColumn(name = "id_AutorComplementar"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<AutorComplementar> autorComplementar;
+
 
 
     public Producao(DadosCadastroProducao dados){
@@ -52,6 +59,10 @@ public class Producao{
 
     public void adicionar (Pesquisador NovoPesquisador){
         pesquisador.add(NovoPesquisador);
+    }
+    public void adicinar (AutorComplementar novoAutor){
+        autorComplementar.add(novoAutor);
+
     }
     public static String EncontrarXML(String idPesquisador){
         String diretorio = "./Curriculos_XML";
@@ -86,7 +97,37 @@ public class Producao{
         }
     }
 
+    public static List<String> encontrarAutoresComplementares(String caminho){
+        try {
+            File inputFile = new File(caminho);
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(inputFile);
 
+            document.getDocumentElement().normalize();
+
+            ArrayList<String> artigos = new ArrayList<>();
+            NodeList artigoList = document.getElementsByTagName("ARTIGO-PUBLICADO");
+            NodeList artigoList2 = document.getElementsByTagName("AUTORES");
+
+            for (int i = 0; i < artigoList2.getLength(); i++) {
+                Node node = artigoList2.item(i);
+
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element elementoArtigo = (Element) node;
+                    String nome = elementoArtigo.getAttribute("NOME-COMPLETO-DO-AUTOR");
+                    String nomeCita = elementoArtigo.getAttribute("NOME-PARA-CITACAO");
+                    artigos.add(nome + "-2" + nomeCita);
+                }
+            }
+
+            return artigos;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public static List<String> encontrarArtigos(String caminho) {
         try {
             File inputFile = new File(caminho);

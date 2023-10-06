@@ -1,5 +1,6 @@
 package br.com.femass.ProjetoDS1.controller;
 
+import br.com.femass.ProjetoDS1.domain.AutorComplementar.AutorComplementarRepository;
 import br.com.femass.ProjetoDS1.domain.ValidacaoException;
 import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
 import br.com.femass.ProjetoDS1.domain.pesquisador.PesquisadorRepository;
@@ -21,6 +22,8 @@ public class ProducaoController {
     private PesquisadorRepository repositoryPesquisador;
     @Autowired
     private ProducaoRepository repository;
+    @Autowired
+    private AutorComplementarRepository repositoryAutorComplementar;
 
 
     @PostMapping
@@ -29,7 +32,6 @@ public class ProducaoController {
         var producao = new Producao(dados);
         var finded = producao.encontrarArtigos(producao.EncontrarXML(dados.idPesquisador()));
         var livros = producao.encontrarLivroeCapitulo(producao.EncontrarXML(dados.idPesquisador()));
-        var teste = producao.encontrarAutoresComplementares(producao.EncontrarXML(dados.idPesquisador()));
         var idProd = new Pesquisador();
         boolean flag = false;
         int conta = 0;
@@ -46,12 +48,11 @@ public class ProducaoController {
 
                 prod.setTitulo(tituloDoArtigo);
                 prod.setAno(anoDoArtigo);
-
+                var autoresToFind = producao.encontrarAutoresComplementares(producao.EncontrarXML(dados.idPesquisador()), prod.getTitulo());
                 var pesquisadorFind = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(dados.idPesquisador());
                 if(pesquisadorFind == null){
                     throw new ValidacaoException("Pesquisador não existe no banco");
                 }
-
                 var pesquisador = repositoryPesquisador.findAllByIdXMLAndIdAndStatusTrue(dados.idPesquisador(), pesquisadorFind.getId());
                 var prodRepo = repository.getReferenceByTitulo(tituloDoArtigo);
                 var pesquisadorArtigo = repository.findAllByPesquisadorIdAndTituloAndStatusTrue(pesquisadorFind.getId(), tituloDoArtigo);

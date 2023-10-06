@@ -1,5 +1,6 @@
-package br.com.femass.ProjetoDS1.domain.producao;
+package br.com.femass.ProjetoDS1.domain.AutorComplementar;
 
+import br.com.femass.ProjetoDS1.domain.producao.Producao;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;

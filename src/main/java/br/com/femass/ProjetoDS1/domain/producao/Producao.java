@@ -1,5 +1,6 @@
 package br.com.femass.ProjetoDS1.domain.producao;
 
+import br.com.femass.ProjetoDS1.domain.AutorComplementar.AutorComplementar;
 import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -13,9 +14,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "producao")
@@ -60,10 +59,10 @@ public class Producao{
     public void adicionar (Pesquisador NovoPesquisador){
         pesquisador.add(NovoPesquisador);
     }
-    public void adicinar (AutorComplementar novoAutor){
+    public void adicionarComplementar (AutorComplementar novoAutor){
         autorComplementar.add(novoAutor);
-
     }
+
     public static String EncontrarXML(String idPesquisador){
         String diretorio = "./Curriculos_XML";
 
@@ -97,7 +96,7 @@ public class Producao{
         }
     }
 
-    public static List<String> encontrarAutoresComplementares(String caminho){
+    public static List<String> encontrarAutoresComplementares(String caminho, String tituloEspecifico) {
         try {
             File inputFile = new File(caminho);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -106,28 +105,43 @@ public class Producao{
 
             document.getDocumentElement().normalize();
 
-            ArrayList<String> artigos = new ArrayList<>();
+            ArrayList<String> autoresComplementares = new ArrayList<>();
             NodeList artigoList = document.getElementsByTagName("ARTIGO-PUBLICADO");
-            NodeList artigoList2 = document.getElementsByTagName("AUTORES");
 
-            for (int i = 0; i < artigoList2.getLength(); i++) {
-                Node node = artigoList2.item(i);
+            for (int i = 0; i < artigoList.getLength(); i++) {
+                Node node = artigoList.item(i);
 
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element elementoArtigo = (Element) node;
-                    String nome = elementoArtigo.getAttribute("NOME-COMPLETO-DO-AUTOR");
-                    String nomeCita = elementoArtigo.getAttribute("NOME-PARA-CITACAO");
-                    artigos.add(nome + "-2" + nomeCita);
+                    Element artigo = (Element) node;
+                    Element dadosBasicos = (Element) artigo.getElementsByTagName("DADOS-BASICOS-DO-ARTIGO").item(0);
+                    String tituloArtigo = dadosBasicos.getAttribute("TITULO-DO-ARTIGO");
+
+                    if (tituloArtigo.equals(tituloEspecifico)) {
+                        NodeList autoresList = artigo.getElementsByTagName("AUTORES");
+
+                        for (int j = 0; j < autoresList.getLength(); j++) {
+                            Node autorNode = autoresList.item(j);
+
+                            if (autorNode.getNodeType() == Node.ELEMENT_NODE) {
+                                Element autor = (Element) autorNode;
+                                String nomeCompleto = autor.getAttribute("NOME-COMPLETO-DO-AUTOR");
+                                String nomeCita = autor.getAttribute("NOME-PARA-CITACAO");
+                                autoresComplementares.add(nomeCompleto + "-2" + nomeCita);
+                            }
+                        }
+                    }
                 }
             }
 
-            return artigos;
+            return autoresComplementares;
 
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
+
     public static List<String> encontrarArtigos(String caminho) {
         try {
             File inputFile = new File(caminho);

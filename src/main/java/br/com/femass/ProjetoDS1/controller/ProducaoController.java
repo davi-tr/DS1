@@ -1,5 +1,7 @@
 package br.com.femass.ProjetoDS1.controller;
 
+import br.com.femass.ProjetoDS1.domain.AutorComplementar.AutorComplementar;
+import br.com.femass.ProjetoDS1.domain.AutorComplementar.AutorComplementarRepository;
 import br.com.femass.ProjetoDS1.domain.ValidacaoException;
 import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
 import br.com.femass.ProjetoDS1.domain.pesquisador.PesquisadorRepository;
@@ -14,23 +16,30 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/producao")
+
 public class ProducaoController {
     @Autowired
     private PesquisadorRepository repositoryPesquisador;
     @Autowired
     private ProducaoRepository repository;
+    @Autowired
+    private AutorComplementarRepository repositoryAutorComplementar;
 
 
     @PostMapping
+
     public ResponseEntity <Page<DadosListagemProducao>> cadastro(@PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC, size = Integer.MAX_VALUE ) Pageable paginacao, @RequestBody @Valid DadosCadastroProducao dados, UriComponentsBuilder uriBuilder){
 
         var producao = new Producao(dados);
         var finded = producao.encontrarArtigos(producao.EncontrarXML(dados.idPesquisador()));
         var livros = producao.encontrarLivroeCapitulo(producao.EncontrarXML(dados.idPesquisador()));
-        var teste = producao.encontrarAutoresComplementares(producao.EncontrarXML(dados.idPesquisador()));
         var idProd = new Pesquisador();
+        List<AutorComplementar> autoresComplementares = new ArrayList<AutorComplementar>();
         boolean flag = false;
         int conta = 0;
         for (var tot : finded) {
@@ -44,12 +53,25 @@ public class ProducaoController {
                 String tituloDoArtigo = partes[0];
                 String anoDoArtigo = partes[1];
 
+
                 prod.setTitulo(tituloDoArtigo);
                 prod.setAno(anoDoArtigo);
-
+                var autoresToFind = producao.encontrarAutoresComplementares(producao.EncontrarXML(dados.idPesquisador()), prod.getTitulo());
                 var pesquisadorFind = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(dados.idPesquisador());
                 if(pesquisadorFind == null){
                     throw new ValidacaoException("Pesquisador não existe no banco");
+                }
+                for (var autorComple: autoresToFind) {
+                    String[] partesAutorComplementar = autorComple.split("-(\\d)");
+                    var autorComplementar = new AutorComplementar();
+                    autorComplementar.setNomeCompleto(partesAutorComplementar[0]);
+                    autorComplementar.setNomeCita(partesAutorComplementar[1]);
+
+                    var nomeAutorComple = repositoryPesquisador.getReferenceByNome(partesAutorComplementar[0]);
+                    System.out.println(autorComplementar.toString());
+                    repositoryAutorComplementar.save(autorComplementar);
+                    var autoresComplementaresEncontra = repositoryAutorComplementar.findAllByNomeCompleto(autorComplementar.getNomeCompleto());
+                    autoresComplementares.addAll(autoresComplementaresEncontra);
                 }
 
                 var pesquisador = repositoryPesquisador.findAllByIdXMLAndIdAndStatusTrue(dados.idPesquisador(), pesquisadorFind.getId());
@@ -70,9 +92,10 @@ public class ProducaoController {
                 }
 
                 prod.setPesquisador(pesquisador);
-
-                System.out.println(prod);
                 repository.save(prod);
+                var autorRecepie = repository.getReferenceByTitulo(prod.getTitulo());
+                autorRecepie.setAutorComplementar(autoresComplementares);
+                //repository.updateAutorComplementar(autorRecepie.getId(), autoresComplementares);
                 if (flag == false) {
                     idProd = pesquisadorFind;
                     flag = true;

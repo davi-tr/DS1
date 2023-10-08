@@ -181,6 +181,15 @@ public class ProducaoController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/{xml}")
+    public ResponseEntity <Page<DadosListagemProducao>> listarPorIdPesquisador(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String xml){
+        var pesquisador = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(xml);
+
+        var page = repository.findAllByPesquisadorIdAndStatusTrue(pesquisador.getId(), paginacao).map(DadosListagemProducao::new);
+
+        return ResponseEntity.ok(page);
+    }
+
     private record MensagemError(String mensagem){
 
     }

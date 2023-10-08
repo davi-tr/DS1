@@ -59,9 +59,8 @@ public class Producao{
     public void adicionar (Pesquisador NovoPesquisador){
         pesquisador.add(NovoPesquisador);
     }
-    public void adicinar (AutorComplementar novoAutor){
+    public void adicionarComplementar (AutorComplementar novoAutor){
         autorComplementar.add(novoAutor);
-
     }
 
     public static String EncontrarXML(String idPesquisador){

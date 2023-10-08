@@ -10,4 +10,6 @@ public interface AutorComplementarRepository extends JpaRepository<AutorCompleme
     List<AutorComplementar> findAllByNomeCompleto(String nomeCompleto);
     AutorComplementar getReferenceByNomeCita(String nomeCita);
     AutorComplementar getReferenceByNomeCompleto(String nomeCompleto);
+
+
 }

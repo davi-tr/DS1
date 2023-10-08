@@ -48,6 +48,7 @@ public class Pesquisador {
     }
 
     public Pesquisador(DadosCadastroPesquisador dados){
+
         this.status = true;
         String valoresXML[] = LerXML(EncontrarXML(dados.idPesquisador()));
         this.idXML = valoresXML[0];

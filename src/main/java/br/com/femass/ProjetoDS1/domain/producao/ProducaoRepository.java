@@ -36,4 +36,5 @@ public interface ProducaoRepository extends JpaRepository<Producao, Long> {
     @Query("update Producao p set p.autorComplementar = :autorComplementar where p.id = :id")
     void updateAutorComplementar(@Param("id") long id, @Param("autorComplementar") List<AutorComplementar> autorComplementar);
 
+    //Page<Producao> findAllByIdPesquisador(Long id, Pageable pageable);
 }

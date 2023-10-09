@@ -1,15 +1,10 @@
 package br.com.femass.ProjetoDS1.domain.producao;
 
 //import br.com.femass.ProjetoDS1.domain.AutorComplementar.AutorComplementar;
-import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Range;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -44,4 +39,9 @@ public interface ProducaoRepository extends JpaRepository<Producao, Long> {
             "WHERE p.ano BETWEEN :anoInicial AND :anoFinal " +
             "AND pesq.id = :id")
     Page<Producao> findAllByAnoBetweenAndPesquisadorId(Long id, String anoInicial, String anoFinal, Pageable pageable);
+
+    @Query("SELECT p FROM Producao p " +
+            "JOIN p.pesquisador pesq " +  // Junta-se à associação ManyToMany Pesquisadores
+            "WHERE pesq.instituto.id = :instituto")
+    Page<Producao> encontrarTodosPorInstituto(Long instituto, Pageable paginacao);
 }

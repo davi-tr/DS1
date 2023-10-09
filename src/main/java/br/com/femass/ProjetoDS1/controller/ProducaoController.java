@@ -192,6 +192,15 @@ public class ProducaoController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/idInstituto={id}")
+    public ResponseEntity <Page<DadosListagemProducao>> listarPorInstituto(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String id){
+
+        var page = repository.encontrarTodosPorInstituto(Long.valueOf(id),paginacao).map(DadosListagemProducao::new);
+
+        return ResponseEntity.ok(page);
+
+    }
+
     private record MensagemError(String mensagem){
 
     }

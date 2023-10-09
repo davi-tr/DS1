@@ -1,6 +1,5 @@
 package br.com.femass.ProjetoDS1.domain.producao;
 
-import br.com.femass.ProjetoDS1.domain.AutorComplementar.AutorComplementar;
 import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -14,7 +13,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "producao")
@@ -36,17 +37,10 @@ public class Producao{
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "producao_resultante",
-                        joinColumns = @JoinColumn(name ="id_producao"),
-                        inverseJoinColumns = @JoinColumn(name = "id_pesquisador"))
+            joinColumns = @JoinColumn(name ="id_producao"),
+            inverseJoinColumns = @JoinColumn(name = "id_pesquisador"))
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Pesquisador> pesquisador;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "producao_resultante",
-            joinColumns = @JoinColumn(name ="id_producao"),
-            inverseJoinColumns = @JoinColumn(name = "id_AutorComplementar"))
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<AutorComplementar> autorComplementar;
 
 
 
@@ -59,10 +53,6 @@ public class Producao{
     public void adicionar (Pesquisador NovoPesquisador){
         pesquisador.add(NovoPesquisador);
     }
-    public void adicionarComplementar (AutorComplementar novoAutor){
-        autorComplementar.add(novoAutor);
-    }
-
     public static String EncontrarXML(String idPesquisador){
         String diretorio = "./Curriculos_XML";
 
@@ -93,51 +83,6 @@ public class Producao{
             return "Arquivo não encontrado na pasta.";
         } else {
             return "Diretório especificado não existe ou não é uma pasta.";
-        }
-    }
-
-    public static List<String> encontrarAutoresComplementares(String caminho, String tituloEspecifico) {
-        try {
-            File inputFile = new File(caminho);
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(inputFile);
-
-            document.getDocumentElement().normalize();
-
-            ArrayList<String> autoresComplementares = new ArrayList<>();
-            NodeList artigoList = document.getElementsByTagName("ARTIGO-PUBLICADO");
-
-            for (int i = 0; i < artigoList.getLength(); i++) {
-                Node node = artigoList.item(i);
-
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element artigo = (Element) node;
-                    Element dadosBasicos = (Element) artigo.getElementsByTagName("DADOS-BASICOS-DO-ARTIGO").item(0);
-                    String tituloArtigo = dadosBasicos.getAttribute("TITULO-DO-ARTIGO");
-
-                    if (tituloArtigo.equals(tituloEspecifico)) {
-                        NodeList autoresList = artigo.getElementsByTagName("AUTORES");
-
-                        for (int j = 0; j < autoresList.getLength(); j++) {
-                            Node autorNode = autoresList.item(j);
-
-                            if (autorNode.getNodeType() == Node.ELEMENT_NODE) {
-                                Element autor = (Element) autorNode;
-                                String nomeCompleto = autor.getAttribute("NOME-COMPLETO-DO-AUTOR");
-                                String nomeCita = autor.getAttribute("NOME-PARA-CITACAO");
-                                autoresComplementares.add(nomeCompleto + "-2" + nomeCita);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return autoresComplementares;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         }
     }
 

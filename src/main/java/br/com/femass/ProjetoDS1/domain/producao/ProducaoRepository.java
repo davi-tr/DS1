@@ -1,6 +1,6 @@
 package br.com.femass.ProjetoDS1.domain.producao;
 
-import br.com.femass.ProjetoDS1.domain.AutorComplementar.AutorComplementar;
+//import br.com.femass.ProjetoDS1.domain.AutorComplementar.AutorComplementar;
 import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,10 +31,10 @@ public interface ProducaoRepository extends JpaRepository<Producao, Long> {
 
     List<Producao> findAllByPesquisadorIdAndStatusTrue(Long id);
 
-    @Modifying
-    @Transactional
-    @Query("update Producao p set p.autorComplementar = :autorComplementar where p.id = :id")
-    void updateAutorComplementar(@Param("id") long id, @Param("autorComplementar") List<AutorComplementar> autorComplementar);
+//    @Modifying
+//    @Transactional
+//    @Query("update Producao p set p.autorComplementar = :autorComplementar where p.id = :id")
+//    void updateAutorComplementar(@Param("id") long id, @Param("autorComplementar") List<AutorComplementar> autorComplementar);
 
     @Query("Select p from Producao p where p.ano between :anoInicial and :anoFinal ")
     Page<Producao> findAllByAnoBetweenAno(String anoInicial, String anoFinal, Pageable pageable);

@@ -93,9 +93,9 @@ public class ProducaoController {
 
                 prod.setPesquisador(pesquisador);
                 repository.save(prod);
-                var autorRecepie = repository.getReferenceByTitulo(prod.getTitulo());
-                autorRecepie.setAutorComplementar(autoresComplementares);
-                //repository.updateAutorComplementar(autorRecepie.getId(), autoresComplementares);
+//                var autorRecepie = repository.getReferenceByTitulo(prod.getTitulo());
+//                autorRecepie.setAutorComplementar(autoresComplementares);
+//                //repository.updateAutorComplementar(autorRecepie.getId(), autoresComplementares);
                 if (flag == false) {
                     idProd = pesquisadorFind;
                     flag = true;
@@ -181,11 +181,27 @@ public class ProducaoController {
         return ResponseEntity.ok(page);
     }
 
-    @GetMapping("/{xml}")
+    @GetMapping("/xml={xml}")
     public ResponseEntity <Page<DadosListagemProducao>> listarPorIdPesquisador(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String xml){
         var pesquisador = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(xml);
 
         var page = repository.findAllByPesquisadorIdAndStatusTrue(pesquisador.getId(), paginacao).map(DadosListagemProducao::new);
+
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/datas={anoInicio}-{anoFim}")
+    public ResponseEntity <Page<DadosListagemProducao>> listarPorData(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String anoInicio, @PathVariable String anoFim){
+        var page = repository.findAllByAnoBetweenAno(anoInicio, anoFim, paginacao).map(DadosListagemProducao::new);
+
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/pesquisador={XML}/datas={anoInicial}-{anoFinal}")
+    public ResponseEntity <Page<DadosListagemProducao>> listarPorDataAndXML(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String XML, @PathVariable String anoInicial, @PathVariable String anoFinal){
+        var pesquisador = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(XML);
+
+        var page = repository.findAllByAnoBetweenAndPesquisadorId(pesquisador.getId(), anoInicial, anoFinal, paginacao).map(DadosListagemProducao::new);
 
         return ResponseEntity.ok(page);
     }

@@ -36,5 +36,12 @@ public interface ProducaoRepository extends JpaRepository<Producao, Long> {
     @Query("update Producao p set p.autorComplementar = :autorComplementar where p.id = :id")
     void updateAutorComplementar(@Param("id") long id, @Param("autorComplementar") List<AutorComplementar> autorComplementar);
 
-    //Page<Producao> findAllByIdPesquisador(Long id, Pageable pageable);
+    @Query("Select p from Producao p where p.ano between :anoInicial and :anoFinal ")
+    Page<Producao> findAllByAnoBetweenAno(String anoInicial, String anoFinal, Pageable pageable);
+
+    @Query("SELECT p FROM Producao p " +
+            "JOIN p.pesquisador pesq " +  // Junta-se à associação ManyToMany Pesquisadores
+            "WHERE p.ano BETWEEN :anoInicial AND :anoFinal " +
+            "AND pesq.id = :id")
+    Page<Producao> findAllByAnoBetweenAndPesquisadorId(Long id, String anoInicial, String anoFinal, Pageable pageable);
 }

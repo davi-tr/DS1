@@ -205,21 +205,21 @@ public class ProducaoController {
         return ResponseEntity.ok(page);
     }
 
-//    @GetMapping("/datas={anoInicio}-{anoFim}")
-//    public ResponseEntity <Page<DadosListagemProducao>> listarPorData(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String anoInicio, @PathVariable String anoFim){
-//        var page = repository.findAllByAnoBetweenAno(anoInicio, anoFim, paginacao).map(DadosListagemProducao::new);
-//
-//        return ResponseEntity.ok(page);
-//    }
-//
-//    @GetMapping("/pesquisador={XML}/datas={anoInicial}-{anoFinal}")
-//    public ResponseEntity <Page<DadosListagemProducao>> listarPorDataAndXML(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String XML, @PathVariable String anoInicial, @PathVariable String anoFinal){
-//        var pesquisador = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(XML);
-//
-//        var page = repository.findAllByAnoBetweenAndPesquisadorId(pesquisador.getId(), anoInicial, anoFinal, paginacao).map(DadosListagemProducao::new);
-//
-//        return ResponseEntity.ok(page);
-//    }
+    @GetMapping("/datas={anoInicio}-{anoFim}")
+    public ResponseEntity <Page<DadosListagemProducao>> listarPorData(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String anoInicio, @PathVariable String anoFim){
+        var page = repository.findAllByAnoBetweenAno(anoInicio, anoFim, paginacao).map(DadosListagemProducao::new);
+
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/pesquisador={XML}/datas={anoInicial}-{anoFinal}")
+    public ResponseEntity <Page<DadosListagemProducao>> listarPorDataAndXML(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String XML, @PathVariable String anoInicial, @PathVariable String anoFinal){
+        var pesquisador = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(XML);
+
+        var page = repository.findAllByAnoBetweenAndAutorId(pesquisador.getId(), anoInicial, anoFinal, paginacao).map(DadosListagemProducao::new);
+
+        return ResponseEntity.ok(page);
+    }
 
     private record MensagemError(String mensagem){
 

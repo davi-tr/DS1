@@ -204,7 +204,7 @@ public class ProducaoController {
 
         return ResponseEntity.ok(page);
     }
-//
+
 //    @GetMapping("/datas={anoInicio}-{anoFim}")
 //    public ResponseEntity <Page<DadosListagemProducao>> listarPorData(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String anoInicio, @PathVariable String anoFim){
 //        var page = repository.findAllByAnoBetweenAno(anoInicio, anoFim, paginacao).map(DadosListagemProducao::new);

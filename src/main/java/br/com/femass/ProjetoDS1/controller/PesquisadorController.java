@@ -1,8 +1,8 @@
 package br.com.femass.ProjetoDS1.controller;
 
-import br.com.femass.ProjetoDS1.domain.instituto.DadosAtualizarInstituto;
 import br.com.femass.ProjetoDS1.domain.pesquisador.*;
-import br.com.femass.ProjetoDS1.domain.instituto.InstitutoRepository;
+import br.com.femass.ProjetoDS1.repository.instituto.InstitutoRepository;
+import br.com.femass.ProjetoDS1.repository.pesquisador.PesquisadorRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 

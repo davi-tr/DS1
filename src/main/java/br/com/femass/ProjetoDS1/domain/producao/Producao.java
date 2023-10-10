@@ -1,8 +1,6 @@
 package br.com.femass.ProjetoDS1.domain.producao;
 
-import br.com.femass.ProjetoDS1.domain.AutorComplementar.AutorComplementar;
 import br.com.femass.ProjetoDS1.domain.autor.Autor;
-import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,10 +18,8 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "producao")
 @Entity(name = "Producao")
-@Getter
-@Setter
 @NoArgsConstructor
-@AllArgsConstructor
+@Data
 @EqualsAndHashCode(of = "id")
 public class Producao{
     @Id
@@ -38,22 +34,7 @@ public class Producao{
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<Autor> autores;
-
-/*    @JoinTable(name = "producao_resultante",
-                        joinColumns = @JoinColumn(name ="id_producao"),
-                        inverseJoinColumns = @JoinColumn(name = "id_pesquisador"))*//*
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<Pesquisador> pesquisador;
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-*//*    @JoinTable(name = "producao_resultante",
-            joinColumns = @JoinColumn(name ="id_producao"),
-            inverseJoinColumns = @JoinColumn(name = "id_AutorComplementar"))*//*
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<AutorComplementar> autorComplementar;*/
-
-
+    private List<Autor> autores = new ArrayList<>();
 
     public Producao(DadosCadastroProducao dados){
         this.status = true;

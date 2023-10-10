@@ -1,5 +1,6 @@
-package br.com.femass.ProjetoDS1.domain.pesquisador;
+package br.com.femass.ProjetoDS1.repository.pesquisador;
 
+import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;

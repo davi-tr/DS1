@@ -1,11 +1,12 @@
 package br.com.femass.ProjetoDS1.controller;
 
-import br.com.femass.ProjetoDS1.domain.AutorComplementar.AutorComplementar;
-import br.com.femass.ProjetoDS1.domain.AutorComplementar.AutorComplementarRepository;
+import br.com.femass.ProjetoDS1.domain.autorComplementar.AutorComplementar;
+import br.com.femass.ProjetoDS1.repository.autorComplementar.AutorComplementarRepository;
 import br.com.femass.ProjetoDS1.domain.ValidacaoException;
 import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
-import br.com.femass.ProjetoDS1.domain.pesquisador.PesquisadorRepository;
+import br.com.femass.ProjetoDS1.repository.pesquisador.PesquisadorRepository;
 import br.com.femass.ProjetoDS1.domain.producao.*;
+import br.com.femass.ProjetoDS1.repository.producao.ProducaoRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,10 +40,11 @@ public class ProducaoController {
         var finded = producao.encontrarArtigos(producao.EncontrarXML(dados.idPesquisador()));
         var livros = producao.encontrarLivroeCapitulo(producao.EncontrarXML(dados.idPesquisador()));
         var idProd = new Pesquisador();
-        List<AutorComplementar> autoresComplementares = new ArrayList<AutorComplementar>();
+
         boolean flag = false;
         int conta = 0;
         for (var tot : finded) {
+            List<AutorComplementar> autoresComplementares = new ArrayList<AutorComplementar>();
             String[] partes = tot.split("-(\\d)");
 
             if (partes.length == 2) {
@@ -67,7 +69,15 @@ public class ProducaoController {
                     autorComplementar.setNomeCompleto(partesAutorComplementar[0]);
                     autorComplementar.setNomeCita(partesAutorComplementar[1]);
 
-                    var nomeAutorComple = repositoryPesquisador.getReferenceByNome(partesAutorComplementar[0]);
+                    var nomeAutorComple = repositoryAutorComplementar.getReferenceByNomeCompleto(autorComplementar.getNomeCompleto());
+                    if(nomeAutorComple != null){
+                        prod.adicionar(nomeAutorComple);
+                        continue;
+                    }
+                    var nomeAutorCita = repositoryAutorComplementar.getReferenceByNomeCita(autorComplementar.getNomeCita());
+                    if(nomeAutorCita != null){
+                        prod.adicionar(nomeAutorCita);
+                    }
                     System.out.println(autorComplementar.toString());
                     repositoryAutorComplementar.save(autorComplementar);
                     var autoresComplementaresEncontra = repositoryAutorComplementar.findAllByNomeCompleto(autorComplementar.getNomeCompleto());
@@ -76,7 +86,8 @@ public class ProducaoController {
 
                 var pesquisador = repositoryPesquisador.findAllByIdXMLAndIdAndStatusTrue(dados.idPesquisador(), pesquisadorFind.getId());
                 var prodRepo = repository.getReferenceByTitulo(tituloDoArtigo);
-                var pesquisadorArtigo = repository.findAllByPesquisadorIdAndTituloAndStatusTrue(pesquisadorFind.getId(), tituloDoArtigo);
+                var pesquisadorArtigo = repository.findAllByAutorIdAndTituto(pesquisadorFind.getId(), tituloDoArtigo);
+                System.out.println();
                 if(!pesquisadorArtigo.isEmpty()){
                    continue;
                 }
@@ -91,18 +102,18 @@ public class ProducaoController {
                     continue;
                 }
 
-                pesquisador.forEach(prod::adicionar);
-                autoresComplementares.forEach(prod::adicionar);
-                //prod.setPesquisador(pesquisador);
+                for (var pesquisadorUni:pesquisador) {
+
+                    prod.adicionar(pesquisadorUni);
+                }
+                for (var autoresComplementaresUni:autoresComplementares){
+                    if(!autoresComplementaresUni.getNomeCompleto().contains(pesquisadorFind.getNome())){
+                        prod.adicionar(autoresComplementaresUni);
+                    }
+                }
+
                 repository.save(prod);
-                //var autorRecepie = repository.getReferenceByTitulo(prod.getTitulo());
-                //autorRecepie.setAutorComplementar(autoresComplementares);
-                //repository.updateAutorComplementar(autorRecepie.getId(), autoresComplementares);
-                //repository.save(autorRecepie);
-                //if (!flag) {
-                //    idProd = pesquisadorFind;
-                //    flag = true;
-                //}
+
             }
 
 
@@ -128,7 +139,7 @@ public class ProducaoController {
 
                 var pesquisador = repositoryPesquisador.findAllByIdXMLAndIdAndStatusTrue(dados.idPesquisador(), pesquisadorFind.getId());
                 var prodRepo = repository.getReferenceByTitulo(tituloDoArtigo);
-                var pesquisadorArtigo = repository.findAllByPesquisadorIdAndTituloAndStatusTrue(pesquisadorFind.getId(), tituloDoArtigo);
+                var pesquisadorArtigo = repository.findAllByAutorIdAndTituto(pesquisadorFind.getId(), tituloDoArtigo);
                 if(!pesquisadorArtigo.isEmpty()){
                     if (conta>1){
                         System.out.println("item já cadastrado");
@@ -146,7 +157,7 @@ public class ProducaoController {
                     idProd = pesquisadorFind;
                 }
 
-                pesquisador.forEach(prod::adicionar);
+                //pesquisador.forEach(prod::adicionar);
                 //prod.setPesquisador(pesquisador);
 
                 System.out.println(prod);
@@ -161,7 +172,7 @@ public class ProducaoController {
         }
         if (!finded.isEmpty()){
             System.out.println("batata");
-            var findAll = repository.findAllByPesquisadorIdAndStatusTrue(idProd.getId(), paginacao).map(DadosListagemProducao::new);
+            var findAll = repository.findAllByAutorId(idProd.getId(), paginacao).map(DadosListagemProducao::new);
 
             var uri = uriBuilder.path("producao/id={id}").buildAndExpand(repositoryPesquisador.getReferenceByIdAndStatusTrue(idProd.getId())).toUri();
 
@@ -189,26 +200,26 @@ public class ProducaoController {
     public ResponseEntity <Page<DadosListagemProducao>> listarPorIdPesquisador(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String xml){
         var pesquisador = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(xml);
 
-        var page = repository.findAllByPesquisadorIdAndStatusTrue(pesquisador.getId(), paginacao).map(DadosListagemProducao::new);
+        var page = repository.findAllByAutorId(pesquisador.getId(), paginacao).map(DadosListagemProducao::new);
 
         return ResponseEntity.ok(page);
     }
-
-    @GetMapping("/datas={anoInicio}-{anoFim}")
-    public ResponseEntity <Page<DadosListagemProducao>> listarPorData(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String anoInicio, @PathVariable String anoFim){
-        var page = repository.findAllByAnoBetweenAno(anoInicio, anoFim, paginacao).map(DadosListagemProducao::new);
-
-        return ResponseEntity.ok(page);
-    }
-
-    @GetMapping("/pesquisador={XML}/datas={anoInicial}-{anoFinal}")
-    public ResponseEntity <Page<DadosListagemProducao>> listarPorDataAndXML(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String XML, @PathVariable String anoInicial, @PathVariable String anoFinal){
-        var pesquisador = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(XML);
-
-        var page = repository.findAllByAnoBetweenAndPesquisadorId(pesquisador.getId(), anoInicial, anoFinal, paginacao).map(DadosListagemProducao::new);
-
-        return ResponseEntity.ok(page);
-    }
+//
+//    @GetMapping("/datas={anoInicio}-{anoFim}")
+//    public ResponseEntity <Page<DadosListagemProducao>> listarPorData(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String anoInicio, @PathVariable String anoFim){
+//        var page = repository.findAllByAnoBetweenAno(anoInicio, anoFim, paginacao).map(DadosListagemProducao::new);
+//
+//        return ResponseEntity.ok(page);
+//    }
+//
+//    @GetMapping("/pesquisador={XML}/datas={anoInicial}-{anoFinal}")
+//    public ResponseEntity <Page<DadosListagemProducao>> listarPorDataAndXML(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String XML, @PathVariable String anoInicial, @PathVariable String anoFinal){
+//        var pesquisador = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(XML);
+//
+//        var page = repository.findAllByAnoBetweenAndPesquisadorId(pesquisador.getId(), anoInicial, anoFinal, paginacao).map(DadosListagemProducao::new);
+//
+//        return ResponseEntity.ok(page);
+//    }
 
     private record MensagemError(String mensagem){
 

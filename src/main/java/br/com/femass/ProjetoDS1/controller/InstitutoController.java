@@ -4,11 +4,9 @@
 package br.com.femass.ProjetoDS1.controller;
 
 import br.com.femass.ProjetoDS1.domain.instituto.*;
-import br.com.femass.ProjetoDS1.domain.pesquisador.PesquisadorRepository;
-import br.com.femass.ProjetoDS1.infra.exception.ErroTrat;
-import jakarta.transaction.Transactional;
+import br.com.femass.ProjetoDS1.repository.instituto.InstitutoRepository;
+import br.com.femass.ProjetoDS1.repository.pesquisador.PesquisadorRepository;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

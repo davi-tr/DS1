@@ -45,4 +45,7 @@ public interface ProducaoRepository extends JpaRepository<Producao, Long> {
             "HAVING COUNT(autor) > 1")
     Page<Producao> encontrarProducaoComMaisDeUmPesquisador(Pageable paginacao);
 
+
+    @Query("SELECT p FROM Producao p JOIN p.autores a WHERE a.id = :autorId and p.ano between :anoInicial and :anoFinal")
+    Page<Producao> findAllByAnoBetweenAndAutorId(@Param("autorId") Long id, @Param("anoInicial") String anoInicial, @Param("anoFinal") String anoFinal, Pageable paginacao);
 }

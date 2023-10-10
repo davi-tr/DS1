@@ -1,48 +1,34 @@
 package br.com.femass.ProjetoDS1.domain.pesquisador;
 
 
+import br.com.femass.ProjetoDS1.domain.autor.Autor;
 import br.com.femass.ProjetoDS1.domain.instituto.Instituto;
-import br.com.femass.ProjetoDS1.domain.instituto.InstitutoRepository;
-import br.com.femass.ProjetoDS1.domain.producao.Producao;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.util.List;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "pesquisador")
 @Entity(name= "Pesquisador")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Pesquisador {
+public class Pesquisador extends Autor {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String idXML;
 
     private String nome;
     private boolean status;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "idISTITUTO")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Instituto instituto;
 
-    @ManyToMany(mappedBy = "pesquisador")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<Producao> producao;
-
-    private transient InstitutoRepository repository;
     public void setInstituto(Instituto instituto) {
         this.instituto = instituto;
     }

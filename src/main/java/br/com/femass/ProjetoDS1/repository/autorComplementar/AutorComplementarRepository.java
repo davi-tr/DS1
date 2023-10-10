@@ -1,5 +1,6 @@
-package br.com.femass.ProjetoDS1.domain.AutorComplementar;
+package br.com.femass.ProjetoDS1.repository.autorComplementar;
 
+import br.com.femass.ProjetoDS1.domain.autorComplementar.AutorComplementar;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,7 +1,8 @@
 // Esta é uma interface de repositório que define métodos para acessar dados de Institutos no banco de dados.
 
-package br.com.femass.ProjetoDS1.domain.instituto;
+package br.com.femass.ProjetoDS1.repository.instituto;
 
+import br.com.femass.ProjetoDS1.domain.instituto.Instituto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

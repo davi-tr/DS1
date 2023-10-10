@@ -1,6 +1,7 @@
 package br.com.femass.ProjetoDS1.domain.pesquisador;
 
 
+import br.com.femass.ProjetoDS1.domain.autor.Autor;
 import br.com.femass.ProjetoDS1.domain.instituto.Instituto;
 import br.com.femass.ProjetoDS1.domain.instituto.InstitutoRepository;
 import br.com.femass.ProjetoDS1.domain.producao.Producao;
@@ -24,21 +25,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Pesquisador {
+public class Pesquisador extends Autor {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String idXML;
 
     private String nome;
     private boolean status;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "idISTITUTO")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Instituto instituto;
 
-    @ManyToMany(mappedBy = "pesquisador")
+    @ManyToMany
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Producao> producao;
 

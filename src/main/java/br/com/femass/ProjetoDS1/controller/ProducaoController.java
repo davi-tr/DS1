@@ -91,15 +91,18 @@ public class ProducaoController {
                     continue;
                 }
 
-                prod.setPesquisador(pesquisador);
+                pesquisador.forEach(prod::adicionar);
+                autoresComplementares.forEach(prod::adicionar);
+                //prod.setPesquisador(pesquisador);
                 repository.save(prod);
-//                var autorRecepie = repository.getReferenceByTitulo(prod.getTitulo());
-//                autorRecepie.setAutorComplementar(autoresComplementares);
-//                //repository.updateAutorComplementar(autorRecepie.getId(), autoresComplementares);
-                if (flag == false) {
-                    idProd = pesquisadorFind;
-                    flag = true;
-                }
+                //var autorRecepie = repository.getReferenceByTitulo(prod.getTitulo());
+                //autorRecepie.setAutorComplementar(autoresComplementares);
+                //repository.updateAutorComplementar(autorRecepie.getId(), autoresComplementares);
+                //repository.save(autorRecepie);
+                //if (!flag) {
+                //    idProd = pesquisadorFind;
+                //    flag = true;
+                //}
             }
 
 
@@ -143,7 +146,8 @@ public class ProducaoController {
                     idProd = pesquisadorFind;
                 }
 
-                prod.setPesquisador(pesquisador);
+                pesquisador.forEach(prod::adicionar);
+                //prod.setPesquisador(pesquisador);
 
                 System.out.println(prod);
                 repository.save(prod);

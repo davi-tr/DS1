@@ -1,6 +1,7 @@
 package br.com.femass.ProjetoDS1.domain.producao;
 
 import br.com.femass.ProjetoDS1.domain.AutorComplementar.AutorComplementar;
+import br.com.femass.ProjetoDS1.domain.autor.Autor;
 import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -35,18 +36,22 @@ public class Producao{
     private Tipo tipo;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "producao_resultante",
+    @JoinTable
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<Autor> autores;
+
+/*    @JoinTable(name = "producao_resultante",
                         joinColumns = @JoinColumn(name ="id_producao"),
-                        inverseJoinColumns = @JoinColumn(name = "id_pesquisador"))
+                        inverseJoinColumns = @JoinColumn(name = "id_pesquisador"))*//*
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Pesquisador> pesquisador;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "producao_resultante",
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+*//*    @JoinTable(name = "producao_resultante",
             joinColumns = @JoinColumn(name ="id_producao"),
-            inverseJoinColumns = @JoinColumn(name = "id_AutorComplementar"))
+            inverseJoinColumns = @JoinColumn(name = "id_AutorComplementar"))*//*
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<AutorComplementar> autorComplementar;
+    private List<AutorComplementar> autorComplementar;*/
 
 
 
@@ -56,11 +61,8 @@ public class Producao{
         this.tipo = Tipo.ARTIGO;
     }
 
-    public void adicionar (Pesquisador NovoPesquisador){
-        pesquisador.add(NovoPesquisador);
-    }
-    public void adicionarComplementar (AutorComplementar novoAutor){
-        autorComplementar.add(novoAutor);
+    public void adicionar (Autor novoAutor){
+        autores.add(novoAutor);
     }
 
     public static String EncontrarXML(String idPesquisador){

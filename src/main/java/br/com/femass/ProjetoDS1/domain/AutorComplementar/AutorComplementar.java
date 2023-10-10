@@ -1,5 +1,6 @@
 package br.com.femass.ProjetoDS1.domain.AutorComplementar;
 
+import br.com.femass.ProjetoDS1.domain.autor.Autor;
 import br.com.femass.ProjetoDS1.domain.producao.Producao;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -15,16 +16,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class AutorComplementar {
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id;
+public class AutorComplementar extends Autor {
+
     @Column(name="nomeCompleto")
     private String nomeCompleto;
     @Column(name="nomeCita")
     private String nomeCita;
 
-    @ManyToMany(mappedBy = "autorComplementar")
+    @ManyToMany
     private List<Producao> producao;
 
     public AutorComplementar(String nomeCompleto, String nomeCita){

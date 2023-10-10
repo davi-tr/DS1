@@ -11,7 +11,9 @@ public record DadosListagemProducao(Long id, String titulo, String ano, Tipo tip
 
     public DadosListagemProducao(Producao producao) {
         this(producao.getId(), producao.getTitulo(), producao.getAno(), producao.getTipo(),
-                producao.getPesquisador().stream()
+                producao.getAutores().stream()
+                        .filter(item -> item instanceof Pesquisador)
+                        .map(item -> (Pesquisador)item)
                         .map(DadosListagemPesquisador::new)
                         .collect(Collectors.toList())); // Collect the mapped objects into a list
     }

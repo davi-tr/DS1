@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="DSaula@db-ds1.c93pxdsjtwu3.sa-east-1.rds.amazonaws.com" uuid="dd996300-72d8-4eef-acb7-8156372ce09b">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://db-ds1.c93pxdsjtwu3.sa-east-1.rds.amazonaws.com:3306/DSaula</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </component>
+</project>

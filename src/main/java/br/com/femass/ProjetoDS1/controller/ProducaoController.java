@@ -205,6 +205,14 @@ public class ProducaoController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/instituto={id}")
+    public ResponseEntity <Page<DadosListagemProducao>> listarPorIdInstituto(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String id) {
+        var pesquisador = repositoryPesquisador.findAllByInstitutoIdAndStatusTrueList(Long.valueOf(id));
+
+        var page = repository.findAllByAutoresIsInAndStatusTrue(pesquisador, paginacao).map(DadosListagemProducao::new);
+
+        return ResponseEntity.ok(page);
+    }
     @GetMapping("/datas={anoInicio}-{anoFim}")
     public ResponseEntity <Page<DadosListagemProducao>> listarPorData(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String anoInicio, @PathVariable String anoFim){
         var page = repository.findAllByAnoBetweenAno(anoInicio, anoFim, paginacao).map(DadosListagemProducao::new);
@@ -217,6 +225,14 @@ public class ProducaoController {
         var pesquisador = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(XML);
 
         var page = repository.findAllByAnoBetweenAndAutorId(pesquisador.getId(), anoInicial, anoFinal, paginacao).map(DadosListagemProducao::new);
+
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/datas={anoInicial}-{anoFinal}/instituto={instituto}")
+    public ResponseEntity <Page<DadosListagemProducao>> listarTodos(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String instituto, @PathVariable String anoInicial, @PathVariable String anoFinal){
+        var autores = repositoryPesquisador.findAllByInstitutoIdAndStatusTrueList(Long.valueOf(instituto));
+        var page = repository.findAllByAutoresIsInAndStatusTrueAndAnoBetween(autores, anoInicial, anoFinal, paginacao).map(DadosListagemProducao::new);
 
         return ResponseEntity.ok(page);
     }

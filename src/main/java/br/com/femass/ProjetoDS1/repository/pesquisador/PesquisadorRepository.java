@@ -1,11 +1,13 @@
 package br.com.femass.ProjetoDS1.repository.pesquisador;
 
+import br.com.femass.ProjetoDS1.domain.autor.Autor;
 import br.com.femass.ProjetoDS1.domain.pesquisador.Pesquisador;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -20,7 +22,8 @@ public interface PesquisadorRepository extends JpaRepository<Pesquisador, Long> 
 
     Page<Pesquisador> findAllByInstitutoIdAndStatusTrue(Long institutoId, Pageable paginacao);
 
-
+    @Query("SELECT p FROM Pesquisador p where p.instituto.id = :institutoId")
+    List<Autor> findAllByInstitutoIdAndStatusTrueList(@Param("institutoId") Long institutoId);
     Pesquisador getReferenceByidXMLAndStatusFalse(String s);
 
     List<Pesquisador> findAllByInstitutoIdAndStatusTrue(Long id);

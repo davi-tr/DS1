@@ -1,5 +1,6 @@
 package br.com.femass.ProjetoDS1.repository.producao;
 
+import br.com.femass.ProjetoDS1.domain.autor.Autor;
 import br.com.femass.ProjetoDS1.domain.producao.Producao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,4 +49,11 @@ public interface ProducaoRepository extends JpaRepository<Producao, Long> {
 
     @Query("SELECT p FROM Producao p JOIN p.autores a WHERE a.id = :autorId and p.ano between :anoInicial and :anoFinal")
     Page<Producao> findAllByAnoBetweenAndAutorId(@Param("autorId") Long id, @Param("anoInicial") String anoInicial, @Param("anoFinal") String anoFinal, Pageable paginacao);
+
+    @Query("SELECT p FROM Producao p JOIN p.autores a JOIN Pesquisador pesq WHERE pesq.instituto.id = :id")
+    Page<Producao> findAllByIdInstituto(Long id, Pageable paginacao);
+
+    Page<Producao> findAllByAutoresIsInAndStatusTrue(List<Autor> autores, Pageable paginacao);
+
+    Page<Producao> findAllByAutoresIsInAndStatusTrueAndAnoBetween(List<Autor> autores,String dataInicial, String dataFinal, Pageable paginacao);
 }

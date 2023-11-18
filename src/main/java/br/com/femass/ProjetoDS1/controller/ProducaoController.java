@@ -229,6 +229,15 @@ public class ProducaoController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/pesquisador={XML}&instituto={instituto}")
+    public ResponseEntity <Page<DadosListagemProducao>> listarPesquisadoresInInstituto(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String XML, @PathVariable String instituto){
+        var pesquisador = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(XML);
+
+        var page = repository.findAllByIdInstituto(pesquisador.getInstituto().getId(), pesquisador.getId(), paginacao).map(DadosListagemProducao::new);
+
+        return ResponseEntity.ok(page);
+    }
+
     @GetMapping("/datas={anoInicial}-{anoFinal}/instituto={instituto}")
     public ResponseEntity <Page<DadosListagemProducao>> listarTodos(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String instituto, @PathVariable String anoInicial, @PathVariable String anoFinal){
         var autores = repositoryPesquisador.findAllByInstitutoIdAndStatusTrueList(Long.valueOf(instituto));

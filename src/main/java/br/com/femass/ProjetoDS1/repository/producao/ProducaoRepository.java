@@ -50,10 +50,12 @@ public interface ProducaoRepository extends JpaRepository<Producao, Long> {
     @Query("SELECT p FROM Producao p JOIN p.autores a WHERE a.id = :autorId and p.ano between :anoInicial and :anoFinal")
     Page<Producao> findAllByAnoBetweenAndAutorId(@Param("autorId") Long id, @Param("anoInicial") String anoInicial, @Param("anoFinal") String anoFinal, Pageable paginacao);
 
-    @Query("SELECT p FROM Producao p JOIN p.autores a JOIN Pesquisador pesq WHERE pesq.instituto.id = :id")
-    Page<Producao> findAllByIdInstituto(Long id, Pageable paginacao);
+    @Query("SELECT p FROM Producao p JOIN p.autores a JOIN Pesquisador pesq ON a.id = pesq.id WHERE pesq.instituto.id = :id and pesq.id= :idPesq")
+    Page<Producao> findAllByIdInstituto(Long id, Long idPesq, Pageable paginacao);
 
     Page<Producao> findAllByAutoresIsInAndStatusTrue(List<Autor> autores, Pageable paginacao);
 
     Page<Producao> findAllByAutoresIsInAndStatusTrueAndAnoBetween(List<Autor> autores,String dataInicial, String dataFinal, Pageable paginacao);
+
+
 }

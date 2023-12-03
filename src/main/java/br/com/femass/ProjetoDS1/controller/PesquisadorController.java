@@ -86,6 +86,30 @@ public class PesquisadorController {
         return ResponseEntity.ok(new DadosUnicoPesquisador(pesquisador));
     }
 
+    @GetMapping("/XMLid={idXML}")
+    public ResponseEntity <Page<DadosListagemPesquisador>> buscaXML(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String idXML){
+        var page = repository.findAllByIdXMLContainingAndStatusTrue(idXML, paginacao).map(DadosListagemPesquisador::new);
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/nome={nome}")
+    public ResponseEntity <Page<DadosListagemPesquisador>> encontrarPorNome(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String nome){
+        var page = repository.findAllByNomeContainingAndStatusTrue(nome, paginacao).map(DadosListagemPesquisador::new);
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/search={search}")
+    public ResponseEntity <Page<DadosListagemPesquisador>> encontrarGeral(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String search){
+        if(checkIfnumber(search)){
+            var page = repository.findAllByIdXMLContainingAndStatusTrue(search, paginacao).map(DadosListagemPesquisador::new);
+            System.out.println(checkIfnumber(search));
+            return ResponseEntity.ok(page);
+        }else {
+            var page = repository.findAllByNomeContainingAndStatusTrue(search, paginacao).map(DadosListagemPesquisador::new);
+            return ResponseEntity.ok(page);
+        }
+    }
+
     @GetMapping("/idInstituto={id}")
     public ResponseEntity<Page<DadosListagemPesquisador>> listarInstitutos(@PathVariable Long id, @PageableDefault (sort = {"id"}, direction = Sort.Direction.DESC, size = Integer.MAX_VALUE ) Pageable paginacao) {
          var page = repository.findAllByInstitutoIdAndStatusTrue(id, paginacao).map(DadosListagemPesquisador::new);
@@ -95,5 +119,8 @@ public class PesquisadorController {
 
     private record MensagemErro(String mensagem) {
 
+    }
+    static boolean checkIfnumber(String str) {
+        return Character.isDigit(str.charAt(0));
     }
 }

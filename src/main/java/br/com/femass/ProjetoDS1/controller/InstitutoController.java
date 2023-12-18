@@ -75,6 +75,13 @@ public class InstitutoController {
         return ResponseEntity.ok(new DadosUnicoInstituto(instituto));
     }
 
+    @GetMapping("/quantidadeInstitutos")
+    public ResponseEntity totalAutores(){
+        var total = repository.totalInstituto();
+        DadosTotalInstituto dados = new DadosTotalInstituto(total);
+        return ResponseEntity.ok(dados);
+    }
+
     // Método para deletar um Instituto pelo seu ID.
     @DeleteMapping("/{id}")
     public ResponseEntity deletarInstituto(@PathVariable Long id){
@@ -106,4 +113,17 @@ public class InstitutoController {
     private record MensagemErro(String mensagem){
 
     }
+
+    private static class DadosTotalInstituto {
+        private final long total;
+
+        public DadosTotalInstituto(Long total) {
+            this.total = total;
+        }
+
+        public long getTotal() {
+            return total;
+        }
+    }
+
 }

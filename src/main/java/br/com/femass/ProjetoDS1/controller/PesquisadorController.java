@@ -80,6 +80,13 @@ public class PesquisadorController {
         return ResponseEntity.ok(new DadosUnicoPesquisador(pesquisador));
     }
 
+    @GetMapping("/quantidadeAutores")
+    public ResponseEntity totalAutores(){
+        var total = repository.totalPesquisador();
+        DadosTotalPesquisador dados = new DadosTotalPesquisador(total);
+        return ResponseEntity.ok(dados);
+    }
+
     @GetMapping("/idXML={idXML}")
     public ResponseEntity encontrarPorXML(@PathVariable String idXML){
         var pesquisador = repository.findAllByIdXMLAndStatusTrue(idXML);
@@ -104,7 +111,8 @@ public class PesquisadorController {
             var page = repository.findAllByIdXMLContainingAndStatusTrue(search, paginacao).map(DadosListagemPesquisador::new);
             System.out.println(checkIfnumber(search));
             return ResponseEntity.ok(page);
-        }else {
+        }
+        else {
             var page = repository.findAllByNomeContainingAndStatusTrue(search, paginacao).map(DadosListagemPesquisador::new);
             return ResponseEntity.ok(page);
         }
@@ -122,5 +130,17 @@ public class PesquisadorController {
     }
     static boolean checkIfnumber(String str) {
         return Character.isDigit(str.charAt(0));
+    }
+
+    private static class DadosTotalPesquisador {
+        private final long total;
+
+        public DadosTotalPesquisador(Long total) {
+            this.total = total;
+        }
+
+        public long getTotal() {
+            return total;
+        }
     }
 }

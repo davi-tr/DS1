@@ -34,6 +34,9 @@ public interface PesquisadorRepository extends JpaRepository<Pesquisador, Long> 
 
     Pesquisador getReferenceByNome(String nome);
 
+    @Query("SELECT COUNT(a) FROM Autor a")
+    Long totalPesquisador();
+
 
     Page<Pesquisador> findAllByNomeContainingAndStatusTrue(String nome, Pageable paginacao);
 

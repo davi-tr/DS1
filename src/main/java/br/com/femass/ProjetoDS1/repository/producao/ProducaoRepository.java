@@ -57,5 +57,6 @@ public interface ProducaoRepository extends JpaRepository<Producao, Long> {
 
     Page<Producao> findAllByAutoresIsInAndStatusTrueAndAnoBetween(List<Autor> autores,String dataInicial, String dataFinal, Pageable paginacao);
 
-
+    @Query("SELECT COUNT(p) FROM Producao p")
+    Long totalProducao();
 }

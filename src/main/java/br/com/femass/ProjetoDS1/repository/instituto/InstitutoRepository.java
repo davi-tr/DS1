@@ -6,6 +6,7 @@ import br.com.femass.ProjetoDS1.domain.instituto.Instituto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -23,4 +24,7 @@ public interface InstitutoRepository extends JpaRepository<Instituto, Long> {
 
     // Método para encontrar um Instituto pelo nome e status "true".
     Instituto findAllByNomeAndStatusTrue(String nome);
+
+    @Query("SELECT COUNT(i) FROM Instituto i")
+    Long totalInstituto();
 }

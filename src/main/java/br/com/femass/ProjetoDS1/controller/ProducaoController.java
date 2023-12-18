@@ -220,6 +220,14 @@ public class ProducaoController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/quantidadeProducoes")
+    public ResponseEntity totalAutores(){
+        var total = repository.totalProducao();
+        DadosTotalProducao dados = new DadosTotalProducao(total);
+        return ResponseEntity.ok(dados);
+    }
+
+
     @GetMapping("/pesquisador={XML}/datas={anoInicial}-{anoFinal}")
     public ResponseEntity <Page<DadosListagemProducao>> listarPorDataAndXML(@PageableDefault (direction = Sort.Direction.DESC, size = Integer.MAX_VALUE)Pageable paginacao, @PathVariable String XML, @PathVariable String anoInicial, @PathVariable String anoFinal){
         var pesquisador = repositoryPesquisador.getReferenceByidXMLAndStatusTrue(XML);
@@ -247,6 +255,18 @@ public class ProducaoController {
     }
 
     private record MensagemError(String mensagem){
-
     }
+
+    private static class DadosTotalProducao {
+        private final long total;
+
+        public DadosTotalProducao(Long total) {
+            this.total = total;
+        }
+
+        public long getTotal() {
+            return total;
+        }
+    }
+
 }
